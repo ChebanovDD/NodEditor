@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{56D45AB4-8379-484E-BFD9-94E224C0EC96}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B2C7BD53-A626-4FC9-813C-44B7C5AE76DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NodEditor.UnitTests", "tests\NodEditor.UnitTests\NodEditor.UnitTests.csproj", "{CF4C705C-5E6A-4193-AC40-1DF354C527B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NodEditor", "src\NodEditor\NodEditor.csproj", "{56BEC51F-35FD-4B5D-B49F-072EEDA3AF05}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF4C705C-5E6A-4193-AC40-1DF354C527B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF4C705C-5E6A-4193-AC40-1DF354C527B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF4C705C-5E6A-4193-AC40-1DF354C527B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF4C705C-5E6A-4193-AC40-1DF354C527B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56BEC51F-35FD-4B5D-B49F-072EEDA3AF05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56BEC51F-35FD-4B5D-B49F-072EEDA3AF05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56BEC51F-35FD-4B5D-B49F-072EEDA3AF05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56BEC51F-35FD-4B5D-B49F-072EEDA3AF05}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CF4C705C-5E6A-4193-AC40-1DF354C527B5} = {B2C7BD53-A626-4FC9-813C-44B7C5AE76DA}
+		{56BEC51F-35FD-4B5D-B49F-072EEDA3AF05} = {56D45AB4-8379-484E-BFD9-94E224C0EC96}
+	EndGlobalSection
+EndGlobal
