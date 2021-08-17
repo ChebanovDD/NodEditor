@@ -1,6 +1,9 @@
-﻿namespace NodEditor.Core.Interfaces
+﻿using System.Collections.Generic;
+
+namespace NodEditor.Core.Interfaces
 {
-    public interface IOutputSocket
+    public interface IOutputSocket : ISocket
     {
+        IReadOnlyList<Connection> Connections { get; }
     }
 }

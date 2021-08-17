@@ -8,11 +8,11 @@ using Xunit;
 
 namespace NodEditor.UnitTests
 {
-    public class NodeTests
+    public class NodeOutputSocketTests
     {
         private readonly INode _node;
 
-        public NodeTests()
+        public NodeOutputSocketTests()
         {
             _node = new DataNode();
         }
@@ -66,7 +66,7 @@ namespace NodEditor.UnitTests
             
             // Act
             _node.AddOutput(outputSocket);
-            _node.SetOutputValue(setValue);
+            _node.SetOutputValue<float>(setValue);
             
             // Assert
             _node.GetOutputValue<float>().Should().Be(expected);
