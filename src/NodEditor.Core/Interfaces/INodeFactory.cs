@@ -2,7 +2,7 @@
 {
     public interface INodeFactory
     {
-        public int Index { get; }
+        public int Index { get; set; }
         public string Name { get; }
     }
 }

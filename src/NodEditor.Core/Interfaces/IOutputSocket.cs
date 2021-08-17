@@ -4,6 +4,6 @@ namespace NodEditor.Core.Interfaces
 {
     public interface IOutputSocket : ISocket
     {
-        IReadOnlyList<Connection> Connections { get; }
+        IReadOnlyList<IConnection> Connections { get; }
     }
 }

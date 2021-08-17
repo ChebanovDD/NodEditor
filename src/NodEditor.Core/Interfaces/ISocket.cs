@@ -7,7 +7,7 @@ namespace NodEditor.Core.Interfaces
         Type Type { get; }
         bool HasConnections { get; }
         
-        void AddConnection(Connection connection);
-        void RemoveConnection(Connection connection);
+        void AddConnection(IConnection connection);
+        void RemoveConnection(IConnection connection);
     }
 }

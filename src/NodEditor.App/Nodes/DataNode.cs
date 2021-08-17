@@ -4,6 +4,5 @@ namespace NodEditor.App.Nodes
 {
     public class DataNode : Node, IDataNode
     {
-        
     }
 }

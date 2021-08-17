@@ -2,6 +2,6 @@
 {
     public interface IInputSocket : ISocket
     {
-        Connection Connection { get; }
+        IConnection Connection { get; }
     }
 }

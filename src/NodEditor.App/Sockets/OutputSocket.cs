@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NodEditor.Core;
 using NodEditor.Core.Interfaces;
 
 namespace NodEditor.App.Sockets
@@ -10,7 +9,7 @@ namespace NodEditor.App.Sockets
         private TValue _value;
 
         public override Type Type => typeof(TValue);
-        public IReadOnlyList<Connection> Connections => _connections;
+        public IReadOnlyList<IConnection> Connections => _connections;
 
         public OutputSocket()
         {

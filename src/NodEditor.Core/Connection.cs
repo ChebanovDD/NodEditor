@@ -2,7 +2,7 @@
 
 namespace NodEditor.Core
 {
-    public class Connection
+    public class Connection : IConnection
     {
         public bool IsCompatible { get; }
         public IInputSocket Input { get; }

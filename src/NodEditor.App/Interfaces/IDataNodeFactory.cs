@@ -2,8 +2,7 @@
 
 namespace NodEditor.App.Interfaces
 {
-    public interface IDataNode : INode
+    public interface IDataNodeFactory : INodeFactory
     {
-        
     }
 }

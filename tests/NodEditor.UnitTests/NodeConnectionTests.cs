@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using NodEditor.App;
+using NodEditor.App.Interfaces;
 using NodEditor.App.Sockets;
-using NodEditor.Core.Interfaces;
+using NSubstitute;
 using Xunit;
 
 namespace NodEditor.UnitTests
@@ -10,9 +10,11 @@ namespace NodEditor.UnitTests
     {
         private readonly INodeEditor _nodeEditor;
 
+        private readonly IFlowManager _flowManager = Substitute.For<IFlowManager>();
+        
         public NodeConnectionTests()
         {
-            _nodeEditor = new NodeEditor();
+            _nodeEditor = new NodeEditor(_flowManager);
         }
 
         [Fact]
@@ -37,8 +39,6 @@ namespace NodEditor.UnitTests
             
             inputSocket.Connection.Input.Should().Be(inputSocket);
             inputSocket.Connection.Output.Should().Be(outputSocket);
-
-            inputSocket.GetValue().Should().Be(value);
         }
 
         [Fact]
