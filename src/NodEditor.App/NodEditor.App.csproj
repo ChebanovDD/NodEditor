@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NodEditor.App\NodEditor.App.csproj" />
+      <ProjectReference Include="..\NodEditor.Core\NodEditor.Core.csproj" />
     </ItemGroup>
 
 </Project>
