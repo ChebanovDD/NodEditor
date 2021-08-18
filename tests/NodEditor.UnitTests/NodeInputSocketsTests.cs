@@ -49,7 +49,7 @@ namespace NodEditor.UnitTests
             
             // Assert
             addNullInput.Should().Throw<SocketNullReferenceException>();
-            getInputValue.Should().Throw<SocketNullReferenceException>();
+            getInputValue.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Fact]

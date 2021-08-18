@@ -7,6 +7,7 @@ namespace NodEditor.Core.Interfaces
         int FactoryIndex { get; set; }
         bool HasInputs { get; }
         bool HasOutput { get; }
+        
         IReadOnlyList<IInputSocket> Inputs { get; }
         IOutputSocket Output { get; }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using NodEditor.App.Extensions;
 using NodEditor.Core.Interfaces;
 
 namespace NodEditor.App.Sockets
@@ -11,7 +10,7 @@ namespace NodEditor.App.Sockets
         
         public TValue GetValue()
         {
-            return Connection.Output.GetValue<TValue>();
+            return ((OutputSocket<TValue>)_connections[0].Output).GetValue();
         }
     }
 }

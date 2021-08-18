@@ -3,7 +3,7 @@ using NodEditor.Core.Interfaces;
 
 namespace NodEditor.App
 {
-    public abstract class NodeFactory<T> : INodeFactory, INodeBuilder<T>, INodeExecutor<T> where T : INode, new()
+    public abstract class NodeFactory<T> : INodeFactory, INodeBuilder<T>, INodeExecutor<T> where T : INode
     {
         public int Index { get; set; }
         public string Name { get; }
@@ -15,14 +15,13 @@ namespace NodEditor.App
 
         public T NewNode()
         {
-            var node = new T
-            {
-                FactoryIndex = Index
-            };
+            var node = CreateNode();
+            node.FactoryIndex = Index;
 
             return BuildNode(node);
         }
 
+        protected abstract T CreateNode();
         protected abstract T BuildNode(T node);
         public abstract void ExecuteNode(T node);
     }

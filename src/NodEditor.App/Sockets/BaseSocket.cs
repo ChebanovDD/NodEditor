@@ -7,7 +7,7 @@ namespace NodEditor.App.Sockets
     public abstract class BaseSocket : ISocket
     {
         protected readonly List<IConnection> _connections = new();
-
+        
         public abstract Type Type { get; }
         public bool HasConnections => _connections.Count > 0;
         
@@ -15,7 +15,7 @@ namespace NodEditor.App.Sockets
         {
             _connections.Add(connection);
         }
-
+        
         public void RemoveConnection(IConnection connection)
         {
             _connections.Remove(connection);

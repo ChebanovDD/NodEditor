@@ -27,6 +27,7 @@ namespace NodEditor.UnitTests
             _node.AddOutput(outputSocket);
             
             // Assert
+            _node.HasOutput.Should().BeTrue();
             _node.Output.Should().Be(outputSocket);
         }
 

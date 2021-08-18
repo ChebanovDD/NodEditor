@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using NodEditor.App.Extensions;
 using NodEditor.App.Sockets;
 using NodEditor.Core.Exceptions;
 using NodEditor.Core.Interfaces;
@@ -9,13 +7,15 @@ namespace NodEditor.App.Nodes
 {
     public abstract class Node : INode
     {
-        private readonly List<IInputSocket> _input = new();
+        private IOutputSocket _output;
+        private readonly List<IInputSocket> _inputs = new();
 
         public int FactoryIndex { get; set; }
-        public bool HasInputs => _input.Count > 0;
-        public bool HasOutput => Output != null;
-        public IReadOnlyList<IInputSocket> Inputs => _input;
-        public IOutputSocket Output { get; private set; }
+        public bool HasInputs => _inputs.Count > 0;
+        public bool HasOutput => _output != null;
+        
+        public IReadOnlyList<IInputSocket> Inputs => _inputs;
+        public IOutputSocket Output => _output;
 
         public INode AddInput(IInputSocket input)
         {
@@ -24,57 +24,34 @@ namespace NodEditor.App.Nodes
                 throw new SocketNullReferenceException();
             }
 
-            _input.Add(input);
+            _inputs.Add(input);
             return this;
         }
 
         public INode AddOutput(IOutputSocket output)
         {
-            Output = output ?? throw new SocketNullReferenceException();
+            _output = output ?? throw new SocketNullReferenceException();
             return this;
         }
 
         public T GetInputValue<T>(int index)
         {
-            return GetInput<T>(index).GetValue();
+            return ((InputSocket<T>)_inputs[index]).GetValue();
         }
 
         public T GetOutputValue<T>()
         {
-            return GetOutput().GetValue<T>();
+            if (_output == null)
+            {
+                throw new SocketNullReferenceException();
+            }
+
+            return ((OutputSocket<T>)_output).GetValue();
         }
 
         public void SetOutputValue<T>(T value)
         {
-            GetOutput().SetValue<T>(value);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private InputSocket<T> GetInput<T>(int index)
-        {
-            if (HasInput(index))
-            {
-                return (InputSocket<T>)Inputs[index];
-            }
-
-            throw new SocketNullReferenceException();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool HasInput(int index)
-        {
-            return HasInputs && 0 <= index && index < _input.Count;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private IOutputSocket GetOutput()
-        {
-            if (HasOutput)
-            {
-                return Output;
-            }
-
-            throw new SocketNullReferenceException();
+            ((OutputSocket<T>)_output).SetValue(value);
         }
     }
 }
