@@ -10,15 +10,6 @@ namespace NodEditor.App.Sockets
         public override Type Type => typeof(TValue);
         public IReadOnlyList<IConnection> Connections => _connections;
 
-        public OutputSocket()
-        {
-        }
-
-        public OutputSocket(TValue value)
-        {
-            Value = value;
-        }
-        
         public void UpdateAllInputValues()
         {
             var count = _connections.Count;

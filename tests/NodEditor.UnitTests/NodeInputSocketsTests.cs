@@ -1,4 +1,5 @@
 ﻿using System;
+using AutoFixture;
 using FluentAssertions;
 using NodEditor.App.Interfaces;
 using NodEditor.App.Sockets;
@@ -10,11 +11,13 @@ namespace NodEditor.UnitTests
 {
     public class NodeInputSocketsTests
     {
+        private readonly IFixture _fixture;
         private readonly TestDataNode _dataNode;
         private readonly INodeEditor _nodeEditor;
         
         public NodeInputSocketsTests()
         {
+            _fixture = new Fixture();
             _dataNode = new TestDataNode();
             _nodeEditor = new NodeEditor(new FlowManager(), new Connector());
         }
@@ -51,7 +54,10 @@ namespace NodEditor.UnitTests
             // Arrange
             var outValue = 5;
             var inputSocket = new InputSocket<int>();
-            var anyOutputSocket = new OutputSocket<int>(outValue);
+            var anyOutputSocket = _fixture
+                .Build<OutputSocket<int>>()
+                .With(output => output.Value, outValue)
+                .Create();
 
             // Act
             _dataNode.AddInputsTest(inputSocket);
@@ -91,7 +97,10 @@ namespace NodEditor.UnitTests
         {
             // Arrange
             var inputSocket = new InputSocket<int>();
-            var anyOutputSocket = new OutputSocket<int>(5);
+            var anyOutputSocket = _fixture
+                .Build<OutputSocket<int>>()
+                .With(output => output.Value, 5)
+                .Create();
 
             // Act
             _dataNode.AddInputsTest(inputSocket);

@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using AutoFixture;
+using FluentAssertions;
 using NodEditor.App.Interfaces;
 using NodEditor.App.Sockets;
 using Xunit;
@@ -7,10 +8,12 @@ namespace NodEditor.UnitTests
 {
     public class NodeConnectionTests
     {
+        private readonly IFixture _fixture;
         private readonly INodeEditor _nodeEditor;
         
         public NodeConnectionTests()
         {
+            _fixture = new Fixture();
             _nodeEditor = new NodeEditor(new FlowManager(), new Connector());
         }
 
@@ -91,7 +94,10 @@ namespace NodEditor.UnitTests
         {
             // Arrange
             var inputSocket = new InputSocket<int>();
-            var outputSocket = new OutputSocket<int>(5);
+            var outputSocket = _fixture
+                .Build<OutputSocket<int>>()
+                .With(output => output.Value, 5)
+                .Create();
             
             // Act
             var connection = _nodeEditor.Connect(outputSocket, inputSocket);
