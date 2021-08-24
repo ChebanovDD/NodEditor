@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using NodEditor.App.Sockets;
+using NodEditor.Core;
 using NodEditor.Core.Exceptions;
 using NodEditor.Core.Interfaces;
 
@@ -8,24 +8,21 @@ namespace NodEditor.App.Nodes
 {
     public abstract class Node : INode
     {
-        private IInputSocket[] _inputs;
-        private IOutputSocket _output;
-        
         public int FactoryIndex { get; set; }
-        public bool HasInputs => _inputs.Length > 0;
-        public bool HasOutput => _output != null;
+        public bool HasInputs => Inputs.Count > 0;
+        public bool HasOutput => Output != null;
         
-        public IReadOnlyList<IInputSocket> Inputs => _inputs;
-        public IOutputSocket Output => _output;
+        public ReadOnlyArray Inputs { get; private set; }
+        public IOutputSocket Output { get; private set; }
 
         public T GetInputValue<T>(int index)
         {
-            return ((InputSocket<T>)_inputs[index]).Value;
+            return ((InputSocket<T>)Inputs[index]).Value;
         }
 
         public T GetOutputValue<T>()
         {
-            return ((OutputSocket<T>)_output).Value;
+            return ((OutputSocket<T>)Output).Value;
         }
         
         public void Execute()
@@ -35,12 +32,17 @@ namespace NodEditor.App.Nodes
         
         protected void AddInputs(params IInputSocket[] inputs)
         {
-            _inputs = inputs ?? throw new SocketCanNotBeNullReferenceException();
+            if (inputs == null)
+            {
+                throw new SocketCanNotBeNullReferenceException();
+            }
+
+            Inputs = new ReadOnlyArray(inputs);
         }
         
         protected void AddOutput(IOutputSocket output)
         {
-            _output = output ?? throw new SocketCanNotBeNullReferenceException();
+            Output = output ?? throw new SocketCanNotBeNullReferenceException();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

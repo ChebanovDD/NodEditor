@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace NodEditor.Core.Interfaces
+﻿namespace NodEditor.Core.Interfaces
 {
     public interface INode
     {
@@ -8,12 +6,12 @@ namespace NodEditor.Core.Interfaces
         bool HasInputs { get; }
         bool HasOutput { get; }
         
-        IReadOnlyList<IInputSocket> Inputs { get; }
+        ReadOnlyArray Inputs { get; }
         IOutputSocket Output { get; }
-
+        
         T GetInputValue<T>(int index);
         T GetOutputValue<T>();
-
+        
         void Execute();
     }
 }
