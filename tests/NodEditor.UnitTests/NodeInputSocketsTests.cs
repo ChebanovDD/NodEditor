@@ -1,89 +1,106 @@
 ﻿using System;
 using FluentAssertions;
 using NodEditor.App.Interfaces;
-using NodEditor.App.Nodes;
 using NodEditor.App.Sockets;
 using NodEditor.Core.Exceptions;
-using NodEditor.Core.Interfaces;
-using NSubstitute;
+using NodEditor.UnitTests.Nodes;
 using Xunit;
 
 namespace NodEditor.UnitTests
 {
     public class NodeInputSocketsTests
     {
-        private readonly INode _node;
+        private readonly TestDataNode _dataNode;
         private readonly INodeEditor _nodeEditor;
         
-        private readonly IFlowManager _flowManager = Substitute.For<IFlowManager>();
-
         public NodeInputSocketsTests()
         {
-            _node = new DataNode();
-            _nodeEditor = new NodeEditor(_flowManager);
+            _dataNode = new TestDataNode();
+            _nodeEditor = new NodeEditor(new FlowManager(), new Connector());
         }
         
         [Fact]
-        public void AddInput_ShouldAddInputSocket_WhenSocketIsNotNull()
+        public void AddInputs_ShouldAddInputs_WhenInputsAreValid()
         {
             // Arrange
             var inputSocket1 = new InputSocket<float>();
             var inputSocket2 = new InputSocket<float>();
             
             // Act
-            _node.AddInput(inputSocket1);
-            _node.AddInput(inputSocket2);
+            _dataNode.AddInputsTest(inputSocket1, inputSocket2);
             
             // Assert
-            _node.HasInputs.Should().BeTrue();
-            _node.Inputs[0].Should().Be(inputSocket1);
-            _node.Inputs[1].Should().Be(inputSocket2);
+            _dataNode.HasInputs.Should().BeTrue();
+            _dataNode.Inputs[0].Should().Be(inputSocket1);
+            _dataNode.Inputs[1].Should().Be(inputSocket2);
         }
         
         [Fact]
-        public void AddAndGetInput_ShouldThrowException_WhenSocketInNull()
+        public void AddInputs_ShouldThrowException_WhenInputsAreNull()
         {
             // Act
-            Action addNullInput = () => _node.AddInput(null);
-            Action getInputValue = () => _node.GetInputValue<float>(0);
+            Action addNullInput = () => _dataNode.AddInputsTest(null);
             
             // Assert
-            addNullInput.Should().Throw<SocketNullReferenceException>();
-            getInputValue.Should().Throw<ArgumentOutOfRangeException>();
+            addNullInput.Should().Throw<SocketCanNotBeNullReferenceException>();
         }
-
+        
         [Fact]
-        public void GetInputValue_ShouldReturnValueFromConnection_WhenTypesIsMatch()
+        public void GetInputValue_ShouldReturnValue_WhenTypeIsCorrect()
         {
             // Arrange
-            const int initValue = 5;
-            const int setValue = 10;
-            
+            var outValue = 5;
             var inputSocket = new InputSocket<int>();
-            var outputSocket = new OutputSocket<int>(initValue);
-            outputSocket.SetValue(setValue);
-            
+            var anyOutputSocket = new OutputSocket<int>(outValue);
+
             // Act
-            _node.AddInput(inputSocket);
-            _nodeEditor.Connect(outputSocket, inputSocket);
+            _dataNode.AddInputsTest(inputSocket);
+            _nodeEditor.Connect(anyOutputSocket, inputSocket);
             
             // Assert
-            inputSocket.GetValue().Should().Be(setValue);
-            _node.GetInputValue<int>(0).Should().Be(setValue);
+            _dataNode.GetInputValue<int>(0).Should().Be(outValue);
         }
         
         [Fact]
         public void GetInputValue_ShouldThrowException_WhenTypeIsWrong()
         {
             // Arrange
-            var intInputSocket = new InputSocket<int>();
+            var inputSocket = new InputSocket<int>();
             
             // Act
-            _node.AddInput(intInputSocket);
-            Action getFloatInputValue = () => _node.GetInputValue<float>(0);
+            _dataNode.AddInputsTest(inputSocket);
+            
+            Action getFloatInputValue = () => _dataNode.GetInputValue<float>(0);
             
             // Assert
             getFloatInputValue.Should().Throw<InvalidCastException>();
+        }
+        
+        [Fact]
+        public void GetInputValue_ShouldThrowException_WhenInputsAreNull()
+        {
+            // Act
+            Action getInputValue = () => _dataNode.GetInputValue<float>(0);
+            
+            // Assert
+            getInputValue.Should().Throw<NullReferenceException>();
+        }
+
+        [Fact]
+        public void Disconnect_ShouldResetValue_WhenDisconnected()
+        {
+            // Arrange
+            var inputSocket = new InputSocket<int>();
+            var anyOutputSocket = new OutputSocket<int>(5);
+
+            // Act
+            _dataNode.AddInputsTest(inputSocket);
+            
+            _nodeEditor.Connect(anyOutputSocket, inputSocket);
+            _nodeEditor.Disconnect(inputSocket.Connection);
+            
+            // Assert
+            _dataNode.GetInputValue<int>(0).Should().Be(default);
         }
     }
 }

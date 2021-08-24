@@ -5,12 +5,13 @@ namespace NodEditor.App.Sockets
 {
     public class InputSocket<TValue> : BaseSocket, IInputSocket
     {
+        public TValue Value { get; internal set; }
         public override Type Type => typeof(TValue);
         public IConnection Connection => _connections[0];
         
-        public TValue GetValue()
+        public override void ResetValue()
         {
-            return ((OutputSocket<TValue>)_connections[0].Output).GetValue();
+            Value = default;
         }
     }
 }

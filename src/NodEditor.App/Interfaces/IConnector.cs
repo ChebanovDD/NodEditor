@@ -2,7 +2,7 @@
 
 namespace NodEditor.App.Interfaces
 {
-    public interface INodeEditor
+    public interface IConnector
     {
         IConnection Connect(IOutputSocket output, IInputSocket input);
         void Disconnect(IConnection connection);

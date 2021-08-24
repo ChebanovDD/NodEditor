@@ -1,6 +1,6 @@
 ﻿using NodEditor.Core.Interfaces;
 
-namespace NodEditor.Core
+namespace NodEditor
 {
     public class Connection : IConnection
     {

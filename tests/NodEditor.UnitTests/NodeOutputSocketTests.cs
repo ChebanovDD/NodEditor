@@ -1,92 +1,104 @@
 ﻿using System;
 using FluentAssertions;
-using NodEditor.App.Nodes;
+using NodEditor.App.Interfaces;
 using NodEditor.App.Sockets;
 using NodEditor.Core.Exceptions;
-using NodEditor.Core.Interfaces;
+using NodEditor.UnitTests.Nodes;
 using Xunit;
 
 namespace NodEditor.UnitTests
 {
     public class NodeOutputSocketTests
     {
-        private readonly INode _node;
-
+        private readonly TestDataNode _dataNode;
+        private readonly INodeEditor _nodeEditor;
+        
         public NodeOutputSocketTests()
         {
-            _node = new DataNode();
+            _dataNode = new TestDataNode();
+            _nodeEditor = new NodeEditor(new FlowManager(), new Connector());
         }
-
+        
         [Fact]
-        public void AddOutput_ShouldAddOutputSocket_WhenSocketIsNotNull()
+        public void AddOutput_ShouldAddOutput_WhenOutputIsValid()
         {
             // Arrange
             var outputSocket = new OutputSocket<float>();
             
             // Act
-            _node.AddOutput(outputSocket);
+            _dataNode.AddOutputTest(outputSocket);
             
             // Assert
-            _node.HasOutput.Should().BeTrue();
-            _node.Output.Should().Be(outputSocket);
-        }
-
-        [Fact]
-        public void AddAndGetOutput_ShouldThrowException_WhenSocketInNull()
-        {
-            // Act
-            Action addNullOutput = () => _node.AddOutput(null);
-            Action getOutputValue = () => _node.GetOutputValue<float>();
-            
-            // Assert
-            addNullOutput.Should().Throw<SocketNullReferenceException>();
-            getOutputValue.Should().Throw<SocketNullReferenceException>();
+            _dataNode.HasOutput.Should().BeTrue();
+            _dataNode.Output.Should().Be(outputSocket);
         }
         
         [Fact]
-        public void GetOutputValue_ShouldReturnInitValue_WhenValueSetFromConstructor()
+        public void AddOutput_ShouldThrowException_WhenOutputIsNull()
         {
-            // Arrange
-            var value = 5.5f;
-            var outputSocket = new OutputSocket<float>(value);
-            
             // Act
-            _node.AddOutput(outputSocket);
+            Action addNullOutput = () => _dataNode.AddOutputTest(null);
             
             // Assert
-            _node.GetOutputValue<float>().Should().Be(value);
+            addNullOutput.Should().Throw<SocketCanNotBeNullReferenceException>();
         }
         
-        [Theory]
-        [InlineData(0, 5.5f, 5.5f)]
-        [InlineData(2.5f, 5.25f, 5.25f)]
-        public void GetOutputValue_ShouldReturnValue_WhenValueSet(float initValue, float setValue, float expected)
-        {
-            // Arrange
-            var outputSocket = new OutputSocket<float>(initValue);
-            
-            // Act
-            _node.AddOutput(outputSocket);
-            _node.SetOutputValue<float>(setValue);
-            
-            // Assert
-            _node.GetOutputValue<float>().Should().Be(expected);
-        }
-
         [Fact]
-        public void SetAndGetOutputValue_ShouldThrowException_WhenTypeIsWrong()
+        public void GetOutputValue_ShouldReturnValue_WhenTypeIsCorrect()
         {
             // Arrange
-            var intOutputSocket = new OutputSocket<int>();
-            
+            var outValue = 5;
+            var anyInputSocket = new InputSocket<int>();
+            var outputSocket = new OutputSocket<int>(outValue);
+
             // Act
-            _node.AddOutput(intOutputSocket);
-            Action setFloatOutputValue = () => _node.SetOutputValue(5.5f);
-            Action getFloatOutputValue = () => _node.GetOutputValue<float>();
+            _dataNode.AddOutputTest(outputSocket);
+            _nodeEditor.Connect(outputSocket, anyInputSocket);
             
             // Assert
-            setFloatOutputValue.Should().Throw<InvalidCastException>();
+            _dataNode.GetOutputValue<int>().Should().Be(outValue);
+        }
+        
+        [Fact]
+        public void GetOutputValue_ShouldThrowException_WhenTypeIsWrong()
+        {
+            // Arrange
+            var outputSocket = new OutputSocket<int>();
+            
+            // Act
+            _dataNode.AddOutputTest(outputSocket);
+            
+            Action getFloatOutputValue = () => _dataNode.GetOutputValue<float>();
+            
+            // Assert
             getFloatOutputValue.Should().Throw<InvalidCastException>();
+        }
+        
+        [Fact]
+        public void GetOutputValue_ShouldThrowException_WhenOutputIsNull()
+        {
+            // Act
+            Action getOutputValue = () => _dataNode.GetOutputValue<float>();
+            
+            // Assert
+            getOutputValue.Should().Throw<NullReferenceException>();
+        }
+
+        [Fact]
+        public void Disconnect_ShouldResetValue_WhenDisconnected()
+        {
+            // Arrange
+            var anyInputSocket = new InputSocket<int>();
+            var outputSocket = new OutputSocket<int>(5);
+
+            // Act
+            _dataNode.AddOutputTest(outputSocket);
+            
+            var connection = _nodeEditor.Connect(outputSocket, anyInputSocket);
+            _nodeEditor.Disconnect(connection);
+            
+            // Assert
+            _dataNode.GetOutputValue<int>().Should().Be(default);
         }
     }
 }

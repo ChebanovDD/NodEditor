@@ -19,6 +19,13 @@ namespace NodEditor.App.Sockets
         public void RemoveConnection(IConnection connection)
         {
             _connections.Remove(connection);
+
+            if (_connections.Count == 0)
+            {
+                ResetValue();
+            }
         }
+
+        public abstract void ResetValue();
     }
 }

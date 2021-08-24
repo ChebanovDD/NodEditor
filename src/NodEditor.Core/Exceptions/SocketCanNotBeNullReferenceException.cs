@@ -2,9 +2,9 @@
 
 namespace NodEditor.Core.Exceptions
 {
-    public class SocketNullReferenceException : Exception
+    public class SocketCanNotBeNullReferenceException : Exception
     {
-        public SocketNullReferenceException()
+        public SocketCanNotBeNullReferenceException()
             : base($"Socket can not be null.")
         {
         }

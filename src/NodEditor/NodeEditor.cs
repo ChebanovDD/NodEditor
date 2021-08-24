@@ -5,7 +5,8 @@ namespace NodEditor
 {
     public class NodeEditor : Editor
     {
-        public NodeEditor(IFlowManager flowManager) : base(flowManager)
+        public NodeEditor(IFlowManager flowManager, IConnector connector) 
+            : base(flowManager, connector)
         {
         }
     }

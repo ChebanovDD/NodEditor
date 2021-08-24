@@ -6,8 +6,7 @@ namespace NodEditor.App.Sockets
 {
     public class OutputSocket<TValue> : BaseSocket, IOutputSocket
     {
-        private TValue _value;
-
+        public TValue Value { get; set; }
         public override Type Type => typeof(TValue);
         public IReadOnlyList<IConnection> Connections => _connections;
 
@@ -17,17 +16,35 @@ namespace NodEditor.App.Sockets
 
         public OutputSocket(TValue value)
         {
-            _value = value;
+            Value = value;
+        }
+        
+        public void UpdateAllInputValues()
+        {
+            var count = _connections.Count;
+            if (count == 0)
+            {
+                return;
+            }
+            
+            for (var i = 0; i < count; i++)
+            {
+                var connection = _connections[i];
+                if (connection.IsCompatible)
+                {
+                    ((InputSocket<TValue>)connection.Input).Value = Value;
+                }
+            }
         }
 
-        public TValue GetValue()
+        public void UpdateLastInputValue()
         {
-            return _value;
+            ((InputSocket<TValue>)_connections[^1].Input).Value = Value;
         }
-
-        public void SetValue(TValue value)
+        
+        public override void ResetValue()
         {
-            _value = value;
+            Value = default;
         }
     }
 }

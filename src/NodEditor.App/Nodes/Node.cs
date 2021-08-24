@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using NodEditor.App.Sockets;
 using NodEditor.Core.Exceptions;
 using NodEditor.Core.Interfaces;
@@ -7,51 +8,42 @@ namespace NodEditor.App.Nodes
 {
     public abstract class Node : INode
     {
+        private IInputSocket[] _inputs;
         private IOutputSocket _output;
-        private readonly List<IInputSocket> _inputs = new();
-
+        
         public int FactoryIndex { get; set; }
-        public bool HasInputs => _inputs.Count > 0;
+        public bool HasInputs => _inputs.Length > 0;
         public bool HasOutput => _output != null;
         
         public IReadOnlyList<IInputSocket> Inputs => _inputs;
         public IOutputSocket Output => _output;
 
-        public INode AddInput(IInputSocket input)
-        {
-            if (input == null)
-            {
-                throw new SocketNullReferenceException();
-            }
-
-            _inputs.Add(input);
-            return this;
-        }
-
-        public INode AddOutput(IOutputSocket output)
-        {
-            _output = output ?? throw new SocketNullReferenceException();
-            return this;
-        }
-
         public T GetInputValue<T>(int index)
         {
-            return ((InputSocket<T>)_inputs[index]).GetValue();
+            return ((InputSocket<T>)_inputs[index]).Value;
         }
 
         public T GetOutputValue<T>()
         {
-            if (_output == null)
-            {
-                throw new SocketNullReferenceException();
-            }
-
-            return ((OutputSocket<T>)_output).GetValue();
+            return ((OutputSocket<T>)_output).Value;
         }
-
-        public void SetOutputValue<T>(T value)
+        
+        public void Execute()
         {
-            ((OutputSocket<T>)_output).SetValue(value);
+            OnExecute();
         }
+        
+        protected void AddInputs(params IInputSocket[] inputs)
+        {
+            _inputs = inputs ?? throw new SocketCanNotBeNullReferenceException();
+        }
+        
+        protected void AddOutput(IOutputSocket output)
+        {
+            _output = output ?? throw new SocketCanNotBeNullReferenceException();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected abstract void OnExecute();
     }
 }
