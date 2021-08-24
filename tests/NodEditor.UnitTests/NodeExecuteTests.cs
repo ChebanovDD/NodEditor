@@ -1,5 +1,4 @@
-﻿using AutoFixture;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NodEditor.App.Interfaces;
 using NodEditor.App.Sockets;
 using NodEditor.UnitTests.Nodes;
@@ -9,13 +8,11 @@ namespace NodEditor.UnitTests
 {
     public class NodeExecuteTests
     {
-        private readonly IFixture _fixture;
         private readonly TestSumNode _sumNode;
         private readonly INodeEditor _nodeEditor;
 
         public NodeExecuteTests()
         {
-            _fixture = new Fixture();
             _sumNode = new TestSumNode();
             _nodeEditor = new NodeEditor(new FlowManager(), new Connector());
         }
@@ -27,14 +24,8 @@ namespace NodEditor.UnitTests
         public void Execute_ShouldCalculateSum_WhenInputsAreValid(float value1, float value2, float expectation)
         {
             // Arrange
-            var outputSocket1 = _fixture
-                .Build<OutputSocket<float>>()
-                .With(output => output.Value, value1)
-                .Create();
-            var outputSocket2 = _fixture
-                .Build<OutputSocket<float>>()
-                .With(output => output.Value, value2)
-                .Create();
+            var outputSocket1 = new OutputSocket<float> { Value = value1 };
+            var outputSocket2 = new OutputSocket<float> { Value = value2 };
             
             // Act
             _nodeEditor.Connect(outputSocket1, _sumNode.Inputs[0]);
