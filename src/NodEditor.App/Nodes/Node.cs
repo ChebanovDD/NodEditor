@@ -12,7 +12,7 @@ namespace NodEditor.App.Nodes
         public bool HasInputs => Inputs.Count > 0;
         public bool HasOutput => Output != null;
         
-        public ReadOnlyArray Inputs { get; private set; }
+        public ReadOnlyArray<IInputSocket> Inputs { get; private set; }
         public IOutputSocket Output { get; private set; }
 
         public T GetInputValue<T>(int index)
@@ -37,7 +37,7 @@ namespace NodEditor.App.Nodes
                 throw new SocketCanNotBeNullReferenceException();
             }
 
-            Inputs = new ReadOnlyArray(inputs);
+            Inputs = new ReadOnlyArray<IInputSocket>(inputs);
         }
         
         protected void AddOutput(IOutputSocket output)

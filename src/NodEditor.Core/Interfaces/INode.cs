@@ -6,7 +6,7 @@
         bool HasInputs { get; }
         bool HasOutput { get; }
         
-        ReadOnlyArray Inputs { get; }
+        ReadOnlyArray<IInputSocket> Inputs { get; }
         IOutputSocket Output { get; }
         
         T GetInputValue<T>(int index);

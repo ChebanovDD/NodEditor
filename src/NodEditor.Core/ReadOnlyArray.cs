@@ -1,18 +1,16 @@
-﻿using NodEditor.Core.Interfaces;
-
-namespace NodEditor.Core
+﻿namespace NodEditor.Core
 {
-    public class ReadOnlyArray
+    public class ReadOnlyArray<T>
     {
-        private readonly IInputSocket[] _inputs;
+        private readonly T[] _inputs;
         
-        public ReadOnlyArray(IInputSocket[] inputs)
+        public ReadOnlyArray(T[] inputs)
         {
             _inputs = inputs;
             Count = inputs.Length;
         }
         
         public int Count { get; }
-        public IInputSocket this[int index] => _inputs[index];
+        public T this[int index] => _inputs[index];
     }
 }
