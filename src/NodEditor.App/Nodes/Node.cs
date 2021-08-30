@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using NodEditor.App.Sockets;
 using NodEditor.Core;
 using NodEditor.Core.Exceptions;
@@ -8,12 +9,26 @@ namespace NodEditor.App.Nodes
 {
     public abstract class Node : INode
     {
-        public int FactoryIndex { get; set; }
+        public Guid Guid { get; }
+        public string Name { get; }
         public bool HasInputs => Inputs.Count > 0;
         public bool HasOutput => Output != null;
-        
+        public int FactoryIndex { set; get; }
+
         public ReadOnlyArray<IInputSocket> Inputs { get; private set; }
         public IOutputSocket Output { get; private set; }
+
+        protected Node(string name)
+        {
+            Name = name;
+            Guid = Guid.NewGuid();
+        }
+
+        protected Node(string name, Guid guid)
+        {
+            Name = name;
+            Guid = guid;
+        }
 
         public T GetInputValue<T>(int index)
         {

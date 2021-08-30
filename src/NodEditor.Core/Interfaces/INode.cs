@@ -1,11 +1,15 @@
-﻿namespace NodEditor.Core.Interfaces
+﻿using System;
+
+namespace NodEditor.Core.Interfaces
 {
     public interface INode
     {
-        int FactoryIndex { get; set; }
+        Guid Guid { get; }
+        string Name { get; }
         bool HasInputs { get; }
         bool HasOutput { get; }
-        
+        int FactoryIndex { get; set; }
+
         ReadOnlyArray<IInputSocket> Inputs { get; }
         IOutputSocket Output { get; }
         

@@ -9,7 +9,7 @@ namespace NodEditor.UnitTests.Nodes
         private readonly InputSocket<float> _input2 = new();
         private readonly OutputSocket<float> _output = new();
         
-        public TestSumNode()
+        public TestSumNode() : base("SumNode")
         {
             AddInputs(_input1, _input2);
             AddOutput(_output);
