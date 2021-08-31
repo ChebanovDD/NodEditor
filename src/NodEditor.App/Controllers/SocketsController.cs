@@ -33,7 +33,7 @@ namespace NodEditor.App.Controllers
         {
             for (var i = 0; i < sockets.Length; i++)
             {
-                ConfigureSocket(sockets[i]);
+                ConfigureSocket(sockets[i], i);
             }
         }
     }

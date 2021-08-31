@@ -11,9 +11,11 @@ namespace NodEditor.App.Controllers
             _node = node;
         }
         
-        protected void ConfigureSocket(T socket)
+        protected void ConfigureSocket(T socket, int index = 0)
         {
             socket.SetNode(_node);
+            socket.ElementIndex = index;
+            
             socket.Connected += OnSocketConnected;
             socket.Disconnected += OnSocketDisconnected;
         }
