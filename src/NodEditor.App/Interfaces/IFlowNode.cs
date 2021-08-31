@@ -3,7 +3,7 @@ using NodEditor.Core.Interfaces;
 
 namespace NodEditor.App.Interfaces
 {
-    public interface IFlowNode
+    public interface IFlowNode : IDataNode
     {
         bool HasInputFlow { get; }
         bool HasOutputFlows { get; }

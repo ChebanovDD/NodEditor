@@ -15,12 +15,25 @@ namespace NodEditor.App.Nodes
         public Guid Guid { get; }
         public string Name { get; }
         public int FactoryIndex { set; get; }
+        public abstract bool IsFlowNode { get; }
         public bool HasInputs => _inputDataController.HasSockets;
         public bool HasOutput => _outputDataController.HasSocket;
         public bool AllInputsReady => _inputDataController.AllInputsReady;
 
         public ReadOnlyArray<IInputSocket> Inputs => _inputDataController.Sockets;
         public IOutputSocket Output => _outputDataController.Socket;
+
+        public event EventHandler ReadyToExecute
+        {
+            add => _inputDataController.ReadyToExecute += value;
+            remove => _inputDataController.ReadyToExecute -= value;
+        }
+        
+        public event EventHandler UnreadyToExecute
+        {
+            add => _inputDataController.UnreadyToExecute += value;
+            remove => _inputDataController.UnreadyToExecute -= value;
+        }
 
         protected Node(string name, Guid guid)
         {
@@ -40,7 +53,7 @@ namespace NodEditor.App.Nodes
         {
             return ((OutputSocket<T>)Output).Value;
         }
-        
+
         public void Execute()
         {
             OnExecute();

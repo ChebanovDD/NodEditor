@@ -12,6 +12,11 @@ namespace NodEditor.Core.Extensions
             return HasCustomAttribute(node, typeof(StartNodeAttribute));
         }
         
+        public static bool IsUpdateNode(this INode node)
+        {
+            return HasCustomAttribute(node, typeof(UpdateNodeAttribute));
+        }
+        
         private static bool HasCustomAttribute(INode node, Type type)
         {
             var attribute = node.GetType().GetCustomAttribute(type, true);

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NodEditor.App.Interfaces;
+using NodEditor.Core.Interfaces;
 
 namespace NodEditor.App
 {
@@ -13,14 +15,66 @@ namespace NodEditor.App
 
         private List<IFlowNode> _flowPath;
 
-        public void RegisterDataNode(IDataNode dataNode)
+        private readonly Dictionary<Guid, DataPath> _dataPaths = new();
+
+        public void RegisterStartNode(IFlowNode startNode)
         {
-            _dataNodes.Add(dataNode);
+            if (_startNode != null)
+            {
+                throw new NotImplementedException();
+            }
+
+            _startNode = startNode ?? throw new NotImplementedException();
+            _startNode.OutputFlows[0].Connected += OnStartNodeConnected;
+            _startNode.OutputFlows[0].Disconnected += OnStartNodeDisconnected;
+            _startNode.OutputFlows[0].SocketOpened += OnStartNodeExecuted;
         }
 
-        public void UnregisterDataNode(IDataNode dataNode)
+        private void OnStartNodeConnected(object sender, IConnection connection)
         {
-            _dataNodes.Remove(dataNode);
+            throw new NotImplementedException();
+        }
+        
+        private void OnStartNodeExecuted(object sender, int socketIndex)
+        {
+            throw new NotImplementedException();
+        }
+        
+        private void OnStartNodeDisconnected(object sender, IConnection connection)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UnregisterStartNode()
+        {
+            if (_startNode == null)
+            {
+                throw new NotImplementedException();
+            }
+            
+            _startNode.OutputFlows[0].Connected -= OnStartNodeConnected;
+            _startNode.OutputFlows[0].Disconnected -= OnStartNodeDisconnected;
+            _startNode = null;
+        }
+
+        public void RegisterUpdateNode(IFlowNode updateNode)
+        {
+            if (_updateNode != null)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            _updateNode = updateNode ?? throw new System.NotImplementedException();
+        }
+
+        public void UnregisterUpdateNode()
+        {
+            if (_updateNode == null)
+            {
+                throw new System.NotImplementedException();
+            }
+            
+            _updateNode = null;
         }
 
         public void RegisterFlowNode(IFlowNode flowNode)
@@ -33,40 +87,14 @@ namespace NodEditor.App
             _flowNodes.Remove(flowNode);
         }
 
-        public void RegisterStartNode(IFlowNode startNode)
+        public void RegisterDataNode(IDataNode dataNode)
         {
-            if (_startNode != null)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            _startNode = startNode;
+            _dataNodes.Add(dataNode);
         }
 
-        public void UnregisterStartNode()
+        public void UnregisterDataNode(IDataNode dataNode)
         {
-            if (_startNode == null)
-            {
-                throw new System.NotImplementedException();
-            }
-            
-            // _startNode.InputFlow.Connected
-            _startNode = null;
-        }
-
-        public void RegisterUpdateNode(IFlowNode updateNode)
-        {
-            _updateNode = updateNode;
-        }
-
-        public void UnregisterUpdateNode()
-        {
-            if (_updateNode == null)
-            {
-                throw new System.NotImplementedException();
-            }
-            
-            _updateNode = null;
+            _dataNodes.Remove(dataNode);
         }
 
         public void Construct()
