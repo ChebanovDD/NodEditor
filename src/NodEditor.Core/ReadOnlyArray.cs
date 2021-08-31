@@ -2,15 +2,15 @@
 {
     public class ReadOnlyArray<T>
     {
-        private readonly T[] _inputs;
+        private readonly T[] _items;
         
-        public ReadOnlyArray(T[] inputs)
+        public ReadOnlyArray(T[] items)
         {
-            _inputs = inputs;
-            Count = inputs.Length;
+            _items = items;
+            Count = items.Length;
         }
         
         public int Count { get; }
-        public T this[int index] => _inputs[index];
+        public T this[int index] => _items[index];
     }
 }

@@ -1,6 +1,6 @@
 ﻿using NodEditor.Core.Interfaces;
 
-namespace NodEditor.Interfaces
+namespace NodEditor.App.Interfaces
 {
     public interface IDataNode : INode
     {

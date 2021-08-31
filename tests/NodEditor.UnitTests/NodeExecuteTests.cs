@@ -8,12 +8,12 @@ namespace NodEditor.UnitTests
 {
     public class NodeExecuteTests
     {
-        private readonly TestSumNode _sumNode;
+        private readonly SumNode _sumNode;
         private readonly INodeEditor _nodeEditor;
 
         public NodeExecuteTests()
         {
-            _sumNode = new TestSumNode();
+            _sumNode = new SumNode();
             _nodeEditor = new NodeEditor(new FlowManager(), new Connector());
         }
 
@@ -30,6 +30,10 @@ namespace NodEditor.UnitTests
             // Act
             _nodeEditor.Connect(outputSocket1, _sumNode.Inputs[0]);
             _nodeEditor.Connect(outputSocket2, _sumNode.Inputs[1]);
+            
+            outputSocket1.UpdateLastInputValue();
+            outputSocket2.UpdateLastInputValue();
+            
             _sumNode.Execute();
             
             // Assert

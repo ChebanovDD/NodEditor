@@ -12,13 +12,12 @@ namespace NodEditor.App.Sockets
 
         public void UpdateAllInputValues()
         {
-            var count = _connections.Count;
-            if (count == 0)
+            if (_connections.Count == 0)
             {
                 return;
             }
             
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < _connections.Count; i++)
             {
                 var connection = _connections[i];
                 if (connection.IsCompatible)

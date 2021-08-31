@@ -57,6 +57,8 @@ namespace NodEditor.UnitTests
             _dataNode.AddInputsTest(inputSocket);
             _nodeEditor.Connect(anyOutputSocket, inputSocket);
             
+            anyOutputSocket.UpdateLastInputValue();
+            
             // Assert
             _dataNode.GetInputValue<int>(0).Should().Be(outValue);
         }

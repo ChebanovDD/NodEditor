@@ -16,11 +16,6 @@ namespace NodEditor
             
             input.AddConnection(connection);
             output.AddConnection(connection);
-
-            if (connection.IsCompatible)
-            {
-                output.UpdateLastInputValue();
-            }
             
             return connection;
         }
