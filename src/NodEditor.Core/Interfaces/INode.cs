@@ -6,10 +6,10 @@ namespace NodEditor.Core.Interfaces
     {
         Guid Guid { get; }
         string Name { get; }
+        int FactoryIndex { get; set; }
         bool HasInputs { get; }
         bool HasOutput { get; }
-        int FactoryIndex { get; set; }
-        bool CanExecute { get; }
+        bool AllInputsReady { get; }
         
         ReadOnlyArray<IInputSocket> Inputs { get; }
         IOutputSocket Output { get; }

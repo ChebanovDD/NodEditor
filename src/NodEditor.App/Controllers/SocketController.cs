@@ -20,7 +20,7 @@ namespace NodEditor.App.Controllers
             }
             
             Socket = socket ?? throw new SocketCanNotBeNullReferenceException();
-            ConfigureSocket(socket);
+            ConfigureSocket(Socket);
         }
     }
 }

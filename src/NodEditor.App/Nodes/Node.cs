@@ -17,7 +17,7 @@ namespace NodEditor.App.Nodes
         public int FactoryIndex { set; get; }
         public bool HasInputs => _inputDataController.HasSockets;
         public bool HasOutput => _outputDataController.HasSocket;
-        public bool CanExecute => _inputDataController.AllInputsConnected;
+        public bool AllInputsReady => _inputDataController.AllInputsReady;
 
         public ReadOnlyArray<IInputSocket> Inputs => _inputDataController.Sockets;
         public IOutputSocket Output => _outputDataController.Socket;

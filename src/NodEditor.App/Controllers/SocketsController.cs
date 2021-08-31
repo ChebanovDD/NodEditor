@@ -26,12 +26,12 @@ namespace NodEditor.App.Controllers
             }
 
             Sockets = new ReadOnlyArray<T>(sockets);
-            ConfigureSockets(sockets);
+            ConfigureSockets(Sockets);
         }
         
-        private void ConfigureSockets(T[] sockets)
+        private void ConfigureSockets(ReadOnlyArray<T> sockets)
         {
-            for (var i = 0; i < sockets.Length; i++)
+            for (var i = 0; i < sockets.Count; i++)
             {
                 ConfigureSocket(sockets[i], i);
             }

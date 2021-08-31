@@ -4,9 +4,9 @@ namespace NodEditor.App.Controllers
 {
     internal class InputDataController : SocketsController<IInputSocket>
     {
-        private bool _allInputsConnected = true;
+        private int _validInputsCount;
 
-        public bool AllInputsConnected => _allInputsConnected;
+        public bool AllInputsReady => _validInputsCount == Sockets.Count;
         
         public InputDataController(INode node) : base(node)
         {
@@ -14,31 +14,18 @@ namespace NodEditor.App.Controllers
 
         protected override void OnSocketConnected(object sender, IConnection connection)
         {
-            _allInputsConnected = AllInputsReady();
+            if (connection.IsCompatible)
+            {
+                _validInputsCount++;
+            }
         }
         
         protected override void OnSocketDisconnected(object sender, IConnection connection)
         {
-            _allInputsConnected = false;
-        }
-        
-        private bool AllInputsReady()
-        {
-            for (var i = 0; i < Sockets.Count; i++)
+            if (connection.IsCompatible)
             {
-                var input = Sockets[i];
-                if (input.HasConnections == false)
-                {
-                    return false;
-                }
-                
-                if (input.Connection.IsCompatible == false)
-                {
-                    return false;
-                }
+                _validInputsCount--;
             }
-            
-            return true;
         }
     }
 }
