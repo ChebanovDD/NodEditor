@@ -11,10 +11,12 @@ namespace NodEditor.App.Sockets
         
         public abstract Type Type { get; }
         public INode Node { get; private set; }
+        public abstract bool HasValue { get; }
         public bool HasConnections => _connections.Count > 0;
         
         public event EventHandler<IConnection> Connected;
         public event EventHandler<IConnection> Disconnected;
+        public event EventHandler<IConnection> Disconnecting;
         
         public void SetNode(INode node)
         {
@@ -29,6 +31,8 @@ namespace NodEditor.App.Sockets
         
         public void RemoveConnection(IConnection connection)
         {
+            Disconnecting?.Invoke(this, connection);
+            
             _connections.Remove(connection);
 
             if (_connections.Count == 0)

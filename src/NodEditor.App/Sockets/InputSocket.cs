@@ -5,13 +5,27 @@ namespace NodEditor.App.Sockets
 {
     public class InputSocket<TValue> : BaseSocket, IInputSocket
     {
-        public TValue Value { get; internal set; }
+        private bool _hasValue;
+        private TValue _value;
+
+        public TValue Value
+        {
+            get => _value;
+            internal set
+            {
+                _value = value;
+                _hasValue = true;
+            }
+        }
+        
         public override Type Type => typeof(TValue);
+        public override bool HasValue => _hasValue;
         public IConnection Connection => _connections[0];
         
         public override void ResetValue()
         {
-            Value = default;
+            _value = default;
+            _hasValue = false;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace NodEditor
         {
             Output = output;
             Input = input;
-            IsCompatible = output.Type == input.Type || input.Type == typeof(object);
+            IsCompatible = output.Type == input.Type;// || input.Type == typeof(object);
         }
         
         public void Remove()

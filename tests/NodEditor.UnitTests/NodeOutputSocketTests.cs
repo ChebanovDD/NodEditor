@@ -49,7 +49,7 @@ namespace NodEditor.UnitTests
             // Arrange
             var outValue = 5;
             var anyInputSocket = new InputSocket<int>();
-            var outputSocket = new OutputSocket<int> { Value = 5 };
+            var outputSocket = new OutputSocket<int>(5);
 
             // Act
             _dataNode.AddOutputTest(outputSocket);
@@ -89,7 +89,7 @@ namespace NodEditor.UnitTests
         {
             // Arrange
             var anyInputSocket = new InputSocket<int>();
-            var outputSocket = new OutputSocket<int> { Value = 5 };
+            var outputSocket = new OutputSocket<int>(5);
 
             // Act
             _dataNode.AddOutputTest(outputSocket);

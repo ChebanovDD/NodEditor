@@ -9,7 +9,6 @@ namespace NodEditor.App.Sockets
 
         public void Open()
         {
-            Value = true;
             SocketOpened?.Invoke(this, ElementIndex);
         }
     }

@@ -10,5 +10,6 @@ namespace NodEditor.App.Interfaces
 
         IInputFlowSocket InputFlow { get; }
         ReadOnlyArray<IOutputFlowSocket> OutputFlows { get; }
+        ReadOnlyArray<DataPath> DataPaths { get; }
     }
 }

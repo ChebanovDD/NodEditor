@@ -15,9 +15,6 @@ namespace NodEditor.Core.Interfaces
         ReadOnlyArray<IInputSocket> Inputs { get; }
         IOutputSocket Output { get; }
         
-        event EventHandler ReadyToExecute;
-        event EventHandler UnreadyToExecute;
-        
         T GetInputValue<T>(int index);
         T GetOutputValue<T>();
 

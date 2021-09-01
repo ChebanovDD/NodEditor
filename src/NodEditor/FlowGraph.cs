@@ -9,6 +9,9 @@ namespace NodEditor
     public class FlowGraph : IFlowGraph
     {
         private readonly IGraphConstructor _graphConstructor = new GraphConstructor();
+
+        private IFlowNode _startNode;
+        private IFlowNode _updateNode;
         
         public Guid Guid { get; }
         public string Name { get; }
@@ -53,19 +56,25 @@ namespace NodEditor
         {
             if (IsStartNode(node, out var startNode))
             {
-                _graphConstructor.RegisterStartNode(startNode);
+                if (_startNode != null)
+                {
+                    throw new NotImplementedException();
+                }
+                
+                _startNode = startNode ?? throw new NotImplementedException();
             }
             else if (IsUpdateNode(node, out var updateNode))
             {
-                _graphConstructor.RegisterUpdateNode(updateNode);
+                if (_updateNode != null)
+                {
+                    throw new NotImplementedException();
+                }
+                
+                _updateNode = updateNode ?? throw new NotImplementedException();
             }
             else if (node.IsFlowNode)
             {
                 _graphConstructor.RegisterFlowNode((IFlowNode)node);
-            }
-            else
-            {
-                _graphConstructor.RegisterDataNode((IDataNode)node);
             }
 
             return this;
@@ -78,12 +87,12 @@ namespace NodEditor
 
         public void Start()
         {
-            throw new NotImplementedException();
+            _startNode?.Execute();
         }
 
         public void Update()
         {
-            throw new NotImplementedException();
+            _updateNode?.Execute();
         }
 
         

@@ -23,18 +23,6 @@ namespace NodEditor.App.Nodes
         public ReadOnlyArray<IInputSocket> Inputs => _inputDataController.Sockets;
         public IOutputSocket Output => _outputDataController.Socket;
 
-        public event EventHandler ReadyToExecute
-        {
-            add => _inputDataController.ReadyToExecute += value;
-            remove => _inputDataController.ReadyToExecute -= value;
-        }
-        
-        public event EventHandler UnreadyToExecute
-        {
-            add => _inputDataController.UnreadyToExecute += value;
-            remove => _inputDataController.UnreadyToExecute -= value;
-        }
-
         protected Node(string name, Guid guid)
         {
             Name = name;
@@ -54,7 +42,7 @@ namespace NodEditor.App.Nodes
             return ((OutputSocket<T>)Output).Value;
         }
 
-        public void Execute()
+        public virtual void Execute()
         {
             OnExecute();
         }
@@ -66,6 +54,11 @@ namespace NodEditor.App.Nodes
         
         protected void AddOutput(IOutputSocket output)
         {
+            if (IsFlowNode)
+            {
+                throw new NotImplementedException();
+            }
+            
             _outputDataController.Add(output);
         }
         

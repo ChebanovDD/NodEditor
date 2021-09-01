@@ -5,24 +5,25 @@ namespace NodEditor.UnitTests.Nodes
 {
     public class LogNode : FlowNode
     {
-        private readonly InputSocket<object> _input = new();
+        private readonly InputSocket<float> _input = new();
         private readonly InputFlowSocket _inputFlow = new();
         private readonly OutputFlowSocket _outputFlow = new();
 
-        public LogNode() : base(nameof(LogNode))
+        public LogNode(string name) : base(name)
         {
             AddInputs(_input);
             AddInputFlow(_inputFlow);
             AddOutputFlows(_outputFlow);
         }
         
-        public object GetLastValue()
+        public float GetLastValue()
         {
             return _input.Value;
         }
         
         protected override void OnExecute()
         {
+            _outputFlow.Open();
         }
     }
 }

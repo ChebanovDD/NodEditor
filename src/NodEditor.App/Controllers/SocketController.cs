@@ -14,7 +14,7 @@ namespace NodEditor.App.Controllers
 
         public void Add(T socket)
         {
-            if (Socket != null)
+            if (HasSocket)
             {
                 throw new SocketAlreadyAddedException();
             }

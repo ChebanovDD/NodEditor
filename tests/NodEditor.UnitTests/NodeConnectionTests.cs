@@ -91,7 +91,7 @@ namespace NodEditor.UnitTests
         {
             // Arrange
             var inputSocket = new InputSocket<int>();
-            var outputSocket = new OutputSocket<int> { Value = 5 };
+            var outputSocket = new OutputSocket<int>(5);
             
             // Act
             var connection = _nodeEditor.Connect(outputSocket, inputSocket);

@@ -11,7 +11,7 @@ namespace NodEditor.App.Controllers
             _node = node;
         }
         
-        protected void ConfigureSocket(T socket, int index = 0)
+        protected virtual void ConfigureSocket(T socket, int index = 0)
         {
             socket.SetNode(_node);
             socket.ElementIndex = index;

@@ -13,7 +13,7 @@ namespace NodEditor.UnitTests
 
         public NodeExecuteTests()
         {
-            _sumNode = new SumNode();
+            _sumNode = new SumNode(nameof(SumNode));
             _nodeEditor = new NodeEditor(new FlowManager(), new Connector());
         }
 
@@ -24,15 +24,15 @@ namespace NodEditor.UnitTests
         public void Execute_ShouldCalculateSum_WhenInputsAreValid(float value1, float value2, float expectation)
         {
             // Arrange
-            var outputSocket1 = new OutputSocket<float> { Value = value1 };
-            var outputSocket2 = new OutputSocket<float> { Value = value2 };
+            var outputSocket1 = new OutputSocket<float>();
+            var outputSocket2 = new OutputSocket<float>();
             
             // Act
             _nodeEditor.Connect(outputSocket1, _sumNode.Inputs[0]);
             _nodeEditor.Connect(outputSocket2, _sumNode.Inputs[1]);
             
-            outputSocket1.UpdateLastInputValue();
-            outputSocket2.UpdateLastInputValue();
+            outputSocket1.Value = value1;
+            outputSocket2.Value = value2;
             
             _sumNode.Execute();
             

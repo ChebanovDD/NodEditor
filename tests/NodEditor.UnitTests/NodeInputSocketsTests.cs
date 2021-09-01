@@ -51,13 +51,13 @@ namespace NodEditor.UnitTests
             // Arrange
             var outValue = 5;
             var inputSocket = new InputSocket<int>();
-            var anyOutputSocket = new OutputSocket<int> { Value = outValue };
+            var anyOutputSocket = new OutputSocket<int>(outValue);
 
             // Act
             _dataNode.AddInputsTest(inputSocket);
             _nodeEditor.Connect(anyOutputSocket, inputSocket);
-            
-            anyOutputSocket.UpdateLastInputValue();
+
+            anyOutputSocket.Value = outValue;
             
             // Assert
             _dataNode.GetInputValue<int>(0).Should().Be(outValue);
@@ -93,7 +93,7 @@ namespace NodEditor.UnitTests
         {
             // Arrange
             var inputSocket = new InputSocket<int>();
-            var anyOutputSocket = new OutputSocket<int> { Value = 5 };
+            var anyOutputSocket = new OutputSocket<int>(5);
 
             // Act
             _dataNode.AddInputsTest(inputSocket);

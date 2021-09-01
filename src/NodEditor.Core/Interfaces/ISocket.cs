@@ -6,10 +6,12 @@ namespace NodEditor.Core.Interfaces
     {
         Type Type { get; }
         INode Node { get; }
+        bool HasValue { get; }
         bool HasConnections { get; }
         
         public event EventHandler<IConnection> Connected;
         public event EventHandler<IConnection> Disconnected;
+        public event EventHandler<IConnection> Disconnecting;
         
         void SetNode(INode node);
         void AddConnection(IConnection connection);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using NodEditor.Core.Interfaces;
 
@@ -7,45 +8,59 @@ namespace NodEditor.App
 {
     public class DataPath
     {
+        private bool _hasChanges;
         private int _readyNodesCount;
-        private readonly List<INode> _nodes = new();
+        private List<INode> _nodes = new();
 
-        public Guid Guid { get; }
-        
-        public DataPath(Guid guid)
+        private readonly IInputSocket _flowInput;
+        private readonly Dictionary<Guid, int> _nodesDepth = new();
+
+        public DataPath(IInputSocket flowInput)
         {
-            Guid = guid;
+            _flowInput = flowInput;
         }
 
-        public void AddNode(INode node)
+        public void Construct()
         {
-            _nodes.Add(node);
-            ValidateNode(node);
-            SubscribeOnEvents(node);
+            ObserveNodeInputs(_flowInput.Connection.Output.Node, 0);
+            SortNodes();
+            ValidateNodes();
         }
 
-        public void RemoveNode(INode node)
+        private void SortNodes()
         {
-            _nodes.Remove(node);
-            ValidateNode(node);
-            UnsubscribeFromEvents(node);
-        }
-
-        public bool Execute()
-        {
-            if (CanExecute() == false)
+            if (_hasChanges)
             {
-                return false;
+                _hasChanges = false;
+                _nodes = _nodes.OrderByDescending(node => _nodesDepth[node.Guid]).ToList();
             }
-            
-            ExecutePath();
-            return true;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool CanExecute()
+        private void ValidateNodes()
         {
-            return _readyNodesCount == _nodes.Count;
+            _readyNodesCount = 0;
+            for (var i = 0; i < _nodes.Count; i++)
+            {
+                if (_nodes[i].AllInputsReady == false)
+                {
+                    break;
+                }
+
+                _readyNodesCount++;
+            }
+        }
+
+        public void Execute()
+        {
+            if (_readyNodesCount == _nodes.Count)
+            {
+                ExecutePath();
+            }
+        }
+        
+        public void Reset()
+        {
+            OverlookNodeInputs(_flowInput.Connection.Output.Node);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -53,47 +68,91 @@ namespace NodEditor.App
         {
             // TODO: Skip if no changes.
             
-            for (var i = _nodes.Count - 1; i >= 0; i--)
+            for (var i = 0; i < _nodes.Count; i++)
             {
                 _nodes[i].Execute();
             }
         }
         
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void ValidateNode(INode node)
+        private void ObserveNodeInputs(INode node, int depth)
         {
-            if (node.AllInputsReady)
+            if (_nodesDepth.ContainsKey(node.Guid))
             {
-                _readyNodesCount++;
+                return;
             }
-            else
+            
+            _nodesDepth.Add(node.Guid, depth);
+
+            if (node.HasInputs == false)
             {
-                _readyNodesCount--;
+                AddNode(node);
+                return;
             }
+            
+            for (var i = 0; i < node.Inputs.Count; i++)
+            {
+                var input = node.Inputs[i];
+                if (input.HasConnections)
+                {
+                    ObserveNodeInputs(input.Connection.Output.Node, depth + 1);
+                }
+                
+                input.Connected += OnDataNodeInputConnected;
+                input.Disconnecting += OnDataNodeInputDisconnecting;
+            }
+
+            AddNode(node);
+        }
+        
+        private void OverlookNodeInputs(INode node)
+        {
+            _nodesDepth.Remove(node.Guid);
+
+            if (node.HasInputs == false)
+            {
+                RemoveNode(node);
+                return;
+            }
+            
+            for (var i = 0; i < node.Inputs.Count; i++)
+            {
+                var input = node.Inputs[i];
+                if (input.HasConnections)
+                {
+                    OverlookNodeInputs(input.Connection.Output.Node);
+                }
+
+                input.Connected -= OnDataNodeInputConnected;
+                input.Disconnecting -= OnDataNodeInputDisconnecting;
+            }
+
+            RemoveNode(node);
+        }
+        
+        private void OnDataNodeInputConnected(object sender, IConnection connection)
+        {
+            ObserveNodeInputs(connection.Output.Node, _nodesDepth[connection.Input.Node.Guid] + 1);
+            SortNodes();
+            ValidateNodes();
+        }
+
+        private void OnDataNodeInputDisconnecting(object sender, IConnection connection)
+        {
+            OverlookNodeInputs(connection.Output.Node);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SubscribeOnEvents(INode node)
+        private void AddNode(INode node)
         {
-            node.ReadyToExecute += OnNodeReadyToExecute;
-            node.UnreadyToExecute += OnNodeUnreadyToExecute;
+            _nodes.Add(node);
+            _hasChanges = true;
         }
 
-        private void OnNodeReadyToExecute(object sender, EventArgs e)
-        {
-            _readyNodesCount++;
-        }
-
-        private void OnNodeUnreadyToExecute(object sender, EventArgs e)
-        {
-            _readyNodesCount--;
-        }
-        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void UnsubscribeFromEvents(INode node)
+        private void RemoveNode(INode node)
         {
-            node.ReadyToExecute -= OnNodeReadyToExecute;
-            node.UnreadyToExecute -= OnNodeUnreadyToExecute;
+            _nodes.Remove(node);
+            _hasChanges = true;
         }
     }
 }

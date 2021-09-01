@@ -5,6 +5,8 @@ namespace NodEditor.UnitTests.Nodes
 {
     public class TestDataNode : DataNode
     {
+        private IOutputSocket _output;
+        
         public TestDataNode() : base(nameof(TestDataNode))
         {
         }
@@ -16,6 +18,7 @@ namespace NodEditor.UnitTests.Nodes
 
         public void AddOutputTest(IOutputSocket output)
         {
+            _output = output;
             AddOutput(output);
         }
 

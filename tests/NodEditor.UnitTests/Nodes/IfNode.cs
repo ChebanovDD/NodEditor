@@ -1,0 +1,39 @@
+﻿using NodEditor.App.Nodes;
+using NodEditor.App.Sockets;
+
+namespace NodEditor.UnitTests.Nodes
+{
+    public class IfNode : FlowNode
+    {
+        private readonly InputSocket<bool> _inputCondition = new();
+        private readonly OutputFlowSocket _outputFlowTrue = new();
+        private readonly OutputFlowSocket _outputFlowFalse = new();
+        private readonly OutputFlowSocket _outputFlowThen = new();
+        
+        public IfNode(string name) : base(name)
+        {
+            AddInputs(_inputCondition);
+            AddOutputFlows(_outputFlowTrue, _outputFlowFalse, _outputFlowThen);
+        }
+
+        protected override void OnExecute()
+        {
+            if (_inputCondition.HasValue == false)
+            {
+                _outputFlowThen.Open();
+                return;
+            }
+
+            if (_inputCondition.Value)
+            {
+                _outputFlowTrue.Open();
+            }
+            else
+            {
+                _outputFlowFalse.Open();
+            }
+            
+            _outputFlowThen.Open();
+        }
+    }
+}
