@@ -30,7 +30,7 @@ namespace NodEditor.UnitTests
             var trueLog = new LogNode<bool>("logTrue");
             var falseLog = new LogNode<bool>("logFalse");
             
-            var flowGraph = new FlowGraph("SumFlowTest")
+            var flowGraph = new FlowGraph("FlowTest")
                 .AddNode(startNode)
                 .AddNode(valueNode1)
                 .AddNode(valueNode2)

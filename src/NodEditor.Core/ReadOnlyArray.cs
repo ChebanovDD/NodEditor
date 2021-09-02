@@ -3,19 +3,11 @@
     public class ReadOnlyArray<T>
     {
         private readonly T[] _items;
-
-        public ReadOnlyArray() : this(null, 0)
-        {
-        }
         
-        public ReadOnlyArray(T[] items) : this(items, items.Length)
-        {
-        }
-        
-        private ReadOnlyArray(T[] items, int count)
+        public ReadOnlyArray(T[] items)
         {
             _items = items;
-            Count = count;
+            Count = items.Length;
         }
         
         public int Count { get; }

@@ -94,7 +94,6 @@ namespace NodEditor
         {
             _updateNode?.Execute();
         }
-
         
         // TODO: Move to INodeValidator.
         private bool IsStartNode(INode node, out IFlowNode startNode)

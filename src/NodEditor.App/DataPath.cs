@@ -76,16 +76,17 @@ namespace NodEditor.App
         
         private void ObserveNodeInputs(INode node, int depth)
         {
-            if (_nodesDepth.ContainsKey(node.Guid))
+            if (IsNodeAdded(node.Guid))
             {
                 return;
             }
             
+            _nodes.Add(node);
+            _hasChanges = true;
             _nodesDepth.Add(node.Guid, depth);
 
             if (node.HasInputs == false)
             {
-                AddNode(node);
                 return;
             }
             
@@ -100,17 +101,21 @@ namespace NodEditor.App
                 input.Connected += OnDataNodeInputConnected;
                 input.Disconnecting += OnDataNodeInputDisconnecting;
             }
-
-            AddNode(node);
         }
-        
+
+        private bool IsNodeAdded(Guid guid)
+        {
+            return _nodesDepth.ContainsKey(guid);
+        }
+
         private void OverlookNodeInputs(INode node)
         {
+            _hasChanges = true;
+            _nodes.Remove(node);
             _nodesDepth.Remove(node.Guid);
 
             if (node.HasInputs == false)
             {
-                RemoveNode(node);
                 return;
             }
             
@@ -125,8 +130,6 @@ namespace NodEditor.App
                 input.Connected -= OnDataNodeInputConnected;
                 input.Disconnecting -= OnDataNodeInputDisconnecting;
             }
-
-            RemoveNode(node);
         }
         
         private void OnDataNodeInputConnected(object sender, IConnection connection)
@@ -139,20 +142,6 @@ namespace NodEditor.App
         private void OnDataNodeInputDisconnecting(object sender, IConnection connection)
         {
             OverlookNodeInputs(connection.Output.Node);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void AddNode(INode node)
-        {
-            _nodes.Add(node);
-            _hasChanges = true;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void RemoveNode(INode node)
-        {
-            _nodes.Remove(node);
-            _hasChanges = true;
         }
     }
 }
