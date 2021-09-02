@@ -6,7 +6,6 @@ namespace NodEditor.Core.Interfaces
     {
         Guid Guid { get; }
         string Name { get; }
-        int FactoryIndex { get; set; }
         bool IsFlowNode { get; }
         bool HasInputs { get; }
         bool HasOutput { get; }

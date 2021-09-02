@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using NodEditor.App;
 using NodEditor.App.Interfaces;
 using NodEditor.Core.Extensions;
 using NodEditor.Core.Interfaces;
+using NodEditor.Variables;
 
 namespace NodEditor
 {
@@ -12,7 +14,8 @@ namespace NodEditor
 
         private IFlowNode _startNode;
         private IFlowNode _updateNode;
-        
+        private Dictionary<Guid, IVariable> _variables = new();
+
         public Guid Guid { get; }
         public string Name { get; }
         public bool IsEnabled { get; private set; }
@@ -52,6 +55,16 @@ namespace NodEditor
             Disabled?.Invoke(this, EventArgs.Empty);
         }
 
+        public void Start()
+        {
+            _startNode?.Execute();
+        }
+
+        public void Update()
+        {
+            _updateNode?.Execute();
+        }
+        
         public IFlowGraph AddNode(INode node)
         {
             if (IsStartNode(node, out var startNode))
@@ -80,21 +93,27 @@ namespace NodEditor
             return this;
         }
 
+        public IFlowGraph RegisterVariable(IVariable variable)
+        {
+            _variables.Add(variable.Guid, variable);
+            return this;
+        }
+
+        public INode CreateGetVariableNode<T>(Guid variableGuid)
+        {
+            return new GetVariableNode<T>(_variables[variableGuid]);
+        }
+
+        public IFlowNode CreateSetVariableNode<T>(Guid variableGuid)
+        {
+            return new SetVariableNode<T>(_variables[variableGuid]);
+        }
+
         public void RemoveNode()
         {
             throw new NotImplementedException();
         }
 
-        public void Start()
-        {
-            _startNode?.Execute();
-        }
-
-        public void Update()
-        {
-            _updateNode?.Execute();
-        }
-        
         // TODO: Move to INodeValidator.
         private bool IsStartNode(INode node, out IFlowNode startNode)
         {

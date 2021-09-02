@@ -14,10 +14,13 @@ namespace NodEditor.Core.Interfaces
         void Enable();
         void Disable();
         
-        IFlowGraph AddNode(INode node);
-        void RemoveNode();
-        
         void Start();
         void Update();
+        
+        IFlowGraph AddNode(INode node);
+        void RemoveNode();
+        IFlowGraph RegisterVariable(IVariable variable);
+        INode CreateGetVariableNode<T>(Guid variableGuid);
+        IFlowNode CreateSetVariableNode<T>(Guid variableGuid);
     }
 }

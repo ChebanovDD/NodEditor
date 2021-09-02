@@ -1,6 +1,5 @@
 ﻿using System;
 using NodEditor.App.Controllers;
-using NodEditor.App.Interfaces;
 using NodEditor.Core;
 using NodEditor.Core.Interfaces;
 
@@ -8,7 +7,7 @@ namespace NodEditor.App.Nodes
 {
     public abstract class FlowNode : DataNode, IFlowNode
     {
-        private ReadOnlyArray<DataPath> _dataPaths;
+        private ReadOnlyArray<IDataPath> _dataPaths;
         private readonly InputFlowController _inputFlowController;
         private readonly OutputFlowController _outputFlowController;
 
@@ -19,7 +18,7 @@ namespace NodEditor.App.Nodes
         public IInputFlowSocket InputFlow => _inputFlowController.Socket;
         public ReadOnlyArray<IOutputFlowSocket> OutputFlows => _outputFlowController.Sockets;
 
-        public ReadOnlyArray<DataPath> DataPaths => _dataPaths ??= CreateDataPaths();
+        public ReadOnlyArray<IDataPath> DataPaths => _dataPaths ??= CreateDataPaths();
 
         protected FlowNode(string name) : this(name, Guid.NewGuid())
         {
@@ -66,7 +65,7 @@ namespace NodEditor.App.Nodes
             }
         }
         
-        private ReadOnlyArray<DataPath> CreateDataPaths()
+        private ReadOnlyArray<IDataPath> CreateDataPaths()
         {
             if (HasInputs == false)
             {
@@ -79,7 +78,7 @@ namespace NodEditor.App.Nodes
                 dataPaths[i] = new DataPath(Inputs[i]);
             }
             
-            return new ReadOnlyArray<DataPath>(dataPaths);
+            return new ReadOnlyArray<IDataPath>(dataPaths);
         }
     }
 }

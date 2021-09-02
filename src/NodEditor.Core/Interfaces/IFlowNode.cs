@@ -1,7 +1,4 @@
-﻿using NodEditor.Core;
-using NodEditor.Core.Interfaces;
-
-namespace NodEditor.App.Interfaces
+﻿namespace NodEditor.Core.Interfaces
 {
     public interface IFlowNode : IDataNode
     {
@@ -10,6 +7,6 @@ namespace NodEditor.App.Interfaces
 
         IInputFlowSocket InputFlow { get; }
         ReadOnlyArray<IOutputFlowSocket> OutputFlows { get; }
-        ReadOnlyArray<DataPath> DataPaths { get; }
+        ReadOnlyArray<IDataPath> DataPaths { get; }
     }
 }

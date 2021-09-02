@@ -1,4 +1,6 @@
-﻿namespace NodEditor.App.Interfaces
+﻿using NodEditor.Core.Interfaces;
+
+namespace NodEditor.App.Interfaces
 {
     public interface IGraphConstructor
     {

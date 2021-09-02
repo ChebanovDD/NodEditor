@@ -6,7 +6,7 @@ using NodEditor.Core.Interfaces;
 
 namespace NodEditor.App
 {
-    public class DataPath
+    public class DataPath : IDataPath
     {
         private bool _hasChanges;
         private int _readyNodesCount;
