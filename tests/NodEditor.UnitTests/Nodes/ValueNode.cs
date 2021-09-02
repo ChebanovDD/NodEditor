@@ -3,12 +3,12 @@ using NodEditor.App.Sockets;
 
 namespace NodEditor.UnitTests.Nodes
 {
-    public class ValueNode : DataNode
+    public class ValueNode<T> : DataNode
     {
-        private readonly float _outputValue;
-        private readonly OutputSocket<float> _output = new();
+        private readonly T _outputValue;
+        private readonly OutputSocket<T> _output = new();
 
-        public ValueNode(float outputValue) : base(nameof(ValueNode))
+        public ValueNode(T outputValue) : base(nameof(T))
         {
             _outputValue = outputValue;
             AddOutput(_output);

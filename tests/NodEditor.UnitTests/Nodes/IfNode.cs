@@ -6,6 +6,7 @@ namespace NodEditor.UnitTests.Nodes
     public class IfNode : FlowNode
     {
         private readonly InputSocket<bool> _inputCondition = new();
+        private readonly InputFlowSocket _inputFlow = new();
         private readonly OutputFlowSocket _outputFlowTrue = new();
         private readonly OutputFlowSocket _outputFlowFalse = new();
         private readonly OutputFlowSocket _outputFlowThen = new();
@@ -13,6 +14,7 @@ namespace NodEditor.UnitTests.Nodes
         public IfNode(string name) : base(name)
         {
             AddInputs(_inputCondition);
+            AddInputFlow(_inputFlow);
             AddOutputFlows(_outputFlowTrue, _outputFlowFalse, _outputFlowThen);
         }
 
