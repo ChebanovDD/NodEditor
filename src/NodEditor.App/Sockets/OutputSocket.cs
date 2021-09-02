@@ -24,7 +24,7 @@ namespace NodEditor.App.Sockets
         public override Type Type => typeof(TValue);
         public override bool HasValue => _hasValue;
         public int ConnectionsCount => _connections.Count;
-        public IReadOnlyList<IConnection> Connections => _connections;
+        public List<IConnection> Connections => _connections;
 
         public OutputSocket()
         {
@@ -44,15 +44,22 @@ namespace NodEditor.App.Sockets
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SetAllConnectionsValue(TValue value)
         {
-            if (_connections.Count == 1)
-            {
-                ((InputSocket<TValue>)_connections[0].Input).Value = value;
-                return;
-            }
-
             for (var i = 0; i < _connections.Count; i++)
             {
-                ((InputSocket<TValue>)_connections[i].Input).Value = value;
+                SetInputValue(_connections[i].Input, value);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void SetInputValue(IInputSocket input, TValue value)
+        {
+            if (input is InputSocket<TValue> inputSocket)
+            {
+                inputSocket.Value = value;
+            }
+            else
+            {
+                ((InputSocket<object>)input).Value = value;
             }
         }
     }

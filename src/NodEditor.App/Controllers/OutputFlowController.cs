@@ -22,18 +22,15 @@ namespace NodEditor.App.Controllers
                 return;
             }
             
-            // TODO: Convert Connections to List?
-            var connections = outputFlow.Connections;
-            
             if (outputFlow.ConnectionsCount == 1)
             {
-                connections[0].Input.Node.Execute();
+                outputFlow.Connections[0].Input.Node.Execute();
                 return;
             }
 
-            for (var i = 0; i < connections.Count; i++)
+            for (var i = 0; i < outputFlow.ConnectionsCount; i++)
             {
-                connections[i].Input.Node.Execute();
+                outputFlow.Connections[i].Input.Node.Execute();
             }
         }
     }
