@@ -12,7 +12,14 @@ namespace NodEditor.App.Controllers
         {
         }
 
-        protected override void OnSocketConnected(object sender, IConnection connection)
+        protected override void ConfigureSocket(IInputSocket socket, int index = 0)
+        {
+            base.ConfigureSocket(socket, index);
+            socket.Connected += OnSocketConnected;
+            socket.Disconnected += OnSocketDisconnected;
+        }
+
+        private void OnSocketConnected(object sender, IConnection connection)
         {
             if (connection.IsCompatible)
             {
@@ -20,7 +27,7 @@ namespace NodEditor.App.Controllers
             }
         }
         
-        protected override void OnSocketDisconnected(object sender, IConnection connection)
+        private void OnSocketDisconnected(object sender, IConnection connection)
         {
             if (connection.IsCompatible)
             {

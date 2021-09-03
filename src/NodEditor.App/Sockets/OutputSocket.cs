@@ -35,7 +35,7 @@ namespace NodEditor.App.Sockets
             _value = value;
         }
 
-        public override void ResetValue()
+        protected override void ResetValue()
         {
             _value = default;
             _hasValue = false;

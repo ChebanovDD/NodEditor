@@ -15,17 +15,6 @@ namespace NodEditor.App.Controllers
         {
             socket.SetNode(_node);
             socket.ElementIndex = index;
-            
-            socket.Connected += OnSocketConnected;
-            socket.Disconnected += OnSocketDisconnected;
-        }
-
-        protected virtual void OnSocketConnected(object sender, IConnection connection)
-        {
-        }
-
-        protected virtual void OnSocketDisconnected(object sender, IConnection connection)
-        {
         }
     }
 }

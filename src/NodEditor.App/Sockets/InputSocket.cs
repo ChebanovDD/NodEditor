@@ -22,7 +22,7 @@ namespace NodEditor.App.Sockets
         public override bool HasValue => _hasValue;
         public IConnection Connection => _connections[0];
         
-        public override void ResetValue()
+        protected override void ResetValue()
         {
             _value = default;
             _hasValue = false;

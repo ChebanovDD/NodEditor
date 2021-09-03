@@ -17,19 +17,19 @@ namespace NodEditor.App.Sockets
         public event EventHandler<IConnection> Connected;
         public event EventHandler<IConnection> Disconnected;
         public event EventHandler<IConnection> Disconnecting;
-        
-        public void SetNode(INode node)
+
+        void ISocket.SetNode(INode node)
         {
             Node = node;
         }
         
-        public void AddConnection(IConnection connection)
+        void ISocket.AddConnection(IConnection connection)
         {
             _connections.Add(connection);
             Connected?.Invoke(this, connection);
         }
         
-        public void RemoveConnection(IConnection connection)
+        void ISocket.RemoveConnection(IConnection connection)
         {
             Disconnecting?.Invoke(this, connection);
             
@@ -43,6 +43,6 @@ namespace NodEditor.App.Sockets
             Disconnected?.Invoke(this, connection);
         }
 
-        public abstract void ResetValue();
+        protected abstract void ResetValue();
     }
 }
