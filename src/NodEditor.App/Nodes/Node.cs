@@ -34,12 +34,12 @@ namespace NodEditor.App.Nodes
 
         public T GetInputValue<T>(int index)
         {
-            return ((InputSocket<T>)Inputs[index]).Value;
+            return ((InputSocket<T>) Inputs[index]).Value;
         }
         
         public T GetOutputValue<T>()
         {
-            return ((OutputSocket<T>)Output).Value;
+            return ((OutputSocket<T>) Output).Value;
         }
 
         public virtual void Execute()
