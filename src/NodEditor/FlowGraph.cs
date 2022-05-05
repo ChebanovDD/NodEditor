@@ -151,7 +151,7 @@ namespace NodEditor
                 throw new NotImplementedException();
             }
 
-            if (entryNode.OutputFlows.Count != 1)
+            if (entryNode.OutputFlows.Length != 1)
             {
                 throw new NotImplementedException();
             }

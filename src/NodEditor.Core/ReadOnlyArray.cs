@@ -7,10 +7,10 @@
         public ReadOnlyArray(T[] items)
         {
             _items = items;
-            Count = items.Length;
+            Length = items.Length;
         }
         
-        public int Count { get; }
+        public int Length { get; }
         public T this[int index] => _items[index];
     }
 }

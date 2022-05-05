@@ -35,7 +35,7 @@ namespace NodEditor.App
         
         private void SubscribeOnFlowNodeEvents(IFlowNode flowNode)
         {
-            for (var i = 0; i < flowNode.Inputs.Count; i++)
+            for (var i = 0; i < flowNode.Inputs.Length; i++)
             {
                 flowNode.Inputs[i].Connected += OnFlowNodeInputConnected;
                 flowNode.Inputs[i].Disconnected += OnFlowNodeInputDisconnected;
@@ -54,7 +54,7 @@ namespace NodEditor.App
 
         private void UnsubscribeFromFlowNodeEvents(IFlowNode flowNode)
         {
-            for (var i = 0; i < flowNode.Inputs.Count; i++)
+            for (var i = 0; i < flowNode.Inputs.Length; i++)
             {
                 flowNode.Inputs[i].Connected -= OnFlowNodeInputConnected;
                 flowNode.Inputs[i].Disconnected -= OnFlowNodeInputDisconnected;

@@ -90,7 +90,7 @@ namespace NodEditor.App
                 return;
             }
             
-            for (var i = 0; i < node.Inputs.Count; i++)
+            for (var i = 0; i < node.Inputs.Length; i++)
             {
                 var input = node.Inputs[i];
                 if (input.HasConnections)
@@ -119,7 +119,7 @@ namespace NodEditor.App
                 return;
             }
             
-            for (var i = 0; i < node.Inputs.Count; i++)
+            for (var i = 0; i < node.Inputs.Length; i++)
             {
                 var input = node.Inputs[i];
                 if (input.HasConnections)

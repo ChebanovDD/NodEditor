@@ -53,13 +53,13 @@ namespace NodEditor.App.Nodes
                 return;
             }
 
-            if (_dataPaths.Count == 1)
+            if (_dataPaths.Length == 1)
             {
                 _dataPaths[0].Execute();
                 return;
             }
 
-            for (var i = 0; i < _dataPaths.Count; i++)
+            for (var i = 0; i < _dataPaths.Length; i++)
             {
                 _dataPaths[i].Execute();
             }
@@ -72,8 +72,8 @@ namespace NodEditor.App.Nodes
                 throw new NotImplementedException();
             }
 
-            var dataPaths = new IDataPath[Inputs.Count];
-            for (var i = 0; i < Inputs.Count; i++)
+            var dataPaths = new IDataPath[Inputs.Length];
+            for (var i = 0; i < Inputs.Length; i++)
             {
                 dataPaths[i] = new DataPath(Inputs[i]);
             }

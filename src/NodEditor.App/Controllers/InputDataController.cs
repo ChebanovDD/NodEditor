@@ -6,7 +6,7 @@ namespace NodEditor.App.Controllers
     {
         private int _validInputsCount;
 
-        public bool AllInputsReady => HasSockets == false || _validInputsCount == Sockets.Count;
+        public bool AllInputsReady => HasSockets == false || _validInputsCount == Sockets.Length;
 
         public InputDataController(INode node) : base(node)
         {

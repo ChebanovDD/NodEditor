@@ -31,7 +31,7 @@ namespace NodEditor.App.Controllers
         
         private void ConfigureSockets(ReadOnlyArray<T> sockets)
         {
-            for (var i = 0; i < sockets.Count; i++)
+            for (var i = 0; i < sockets.Length; i++)
             {
                 ConfigureSocket(sockets[i], i);
             }
