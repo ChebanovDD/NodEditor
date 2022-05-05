@@ -8,15 +8,17 @@ namespace NodEditor.Variables
     internal class SetVariableNode<T> : FlowNode
     {
         private readonly Variable<T> _variable;
-        private readonly InputSocket<T> _input = new();
-        private readonly InputFlowSocket _inputFlow = new();
-        private readonly OutputFlowSocket _outputFlow = new();
+        private readonly InputSocket<T> _input;
+        private readonly OutputFlowSocket _outputFlow;
 
         public SetVariableNode(IVariable variable) : base(variable.Name, Guid.NewGuid())
         {
-            _variable = (Variable<T>)variable;
+            _variable = (Variable<T>) variable;
+            _input = new InputSocket<T>();
+            _outputFlow = new OutputFlowSocket();
+
             AddInputs(_input);
-            AddInputFlow(_inputFlow);
+            AddInputFlow(new InputFlowSocket());
             AddOutputFlows(_outputFlow);
         }
 

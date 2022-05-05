@@ -8,8 +8,13 @@ namespace NodEditor.App
 {
     public class GraphConstructor : IGraphConstructor
     {
-        private readonly List<IFlowNode> _flowNodes = new();
+        private readonly List<IFlowNode> _flowNodes;
 
+        public GraphConstructor()
+        {
+            _flowNodes = new List<IFlowNode>();
+        }
+        
         public void RegisterFlowNode(IFlowNode flowNode)
         {
             if (_flowNodes.Contains(flowNode))

@@ -7,7 +7,12 @@ namespace NodEditor
 {
     public class FlowMachine : IFlowMachine
     {
-        private readonly List<IFlowGraph> _flowGraphs = new();
+        private readonly List<IFlowGraph> _flowGraphs;
+
+        public FlowMachine()
+        {
+            _flowGraphs = new List<IFlowGraph>();
+        }
         
         public void Update()
         {

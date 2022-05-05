@@ -6,7 +6,7 @@ namespace NodEditor.App.Extensions
     {
         public static IDataPath GetDataPath(this IInputSocket input)
         {
-            return ((IFlowNode)input.Node).DataPaths[input.ElementIndex];
+            return ((IFlowNode) input.Node).DataPaths[input.ElementIndex];
         }
     }
 }

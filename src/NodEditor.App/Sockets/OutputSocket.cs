@@ -24,7 +24,7 @@ namespace NodEditor.App.Sockets
         public override Type Type => typeof(TValue);
         public override bool HasValue => _hasValue;
         public int ConnectionsCount => _connections.Count;
-        public List<IConnection> Connections => _connections;
+        public IReadOnlyList<IConnection> Connections => _connections;
 
         public OutputSocket()
         {
@@ -59,7 +59,7 @@ namespace NodEditor.App.Sockets
             }
             else
             {
-                ((InputSocket<object>)input).Value = value;
+                ((InputSocket<object>) input).Value = value;
             }
         }
     }

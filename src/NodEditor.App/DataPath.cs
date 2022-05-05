@@ -10,14 +10,17 @@ namespace NodEditor.App
     {
         private bool _hasChanges;
         private int _readyNodesCount;
-        private List<INode> _nodes = new();
+        private List<INode> _nodes;
 
         private readonly IInputSocket _flowInput;
-        private readonly Dictionary<Guid, int> _nodesDepth = new();
+        private readonly Dictionary<Guid, int> _nodesDepth;
 
         public DataPath(IInputSocket flowInput)
         {
             _flowInput = flowInput;
+
+            _nodes = new List<INode>();
+            _nodesDepth = new Dictionary<Guid, int>();
         }
 
         public void Construct()

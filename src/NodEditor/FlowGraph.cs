@@ -10,11 +10,11 @@ namespace NodEditor
 {
     public class FlowGraph : IFlowGraph
     {
-        private readonly IGraphConstructor _graphConstructor = new GraphConstructor();
+        private readonly IGraphConstructor _graphConstructor;
+        private readonly Dictionary<Guid, IVariable> _variables;
 
         private IFlowNode _startNode;
         private IFlowNode _updateNode;
-        private Dictionary<Guid, IVariable> _variables = new();
 
         public Guid Guid { get; }
         public string Name { get; }
@@ -25,6 +25,8 @@ namespace NodEditor
 
         public FlowGraph(string name) : this(name, Guid.NewGuid())
         {
+            _graphConstructor = new GraphConstructor();
+            _variables = new Dictionary<Guid, IVariable>();
         }
         
         public FlowGraph(string name, Guid guid)

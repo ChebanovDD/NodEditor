@@ -1,5 +1,4 @@
 ﻿using System;
-using NodEditor.App.Interfaces;
 using NodEditor.Core.Interfaces;
 
 namespace NodEditor.App.Nodes
