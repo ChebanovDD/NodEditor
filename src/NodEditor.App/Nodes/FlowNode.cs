@@ -72,7 +72,7 @@ namespace NodEditor.App.Nodes
                 throw new NotImplementedException();
             }
 
-            var dataPaths = new DataPath[Inputs.Count];
+            var dataPaths = new IDataPath[Inputs.Count];
             for (var i = 0; i < Inputs.Count; i++)
             {
                 dataPaths[i] = new DataPath(Inputs[i]);
