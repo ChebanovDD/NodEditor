@@ -43,7 +43,7 @@ namespace NodEditor.App
             for (var i = 0; i < flowNode.Inputs.Length; i++)
             {
                 flowNode.Inputs[i].Connected += OnFlowNodeInputConnected;
-                flowNode.Inputs[i].Disconnected += OnFlowNodeInputDisconnected;
+                flowNode.Inputs[i].Disconnecting += OnFlowNodeInputDisconnecting;
             }
         }
 
@@ -52,7 +52,7 @@ namespace NodEditor.App
             connection.Input.GetDataPath().Construct();
         }
 
-        private void OnFlowNodeInputDisconnected(object sender, IConnection connection)
+        private void OnFlowNodeInputDisconnecting(object sender, IConnection connection)
         {
             connection.Input.GetDataPath().Reset();
         }
@@ -62,7 +62,7 @@ namespace NodEditor.App
             for (var i = 0; i < flowNode.Inputs.Length; i++)
             {
                 flowNode.Inputs[i].Connected -= OnFlowNodeInputConnected;
-                flowNode.Inputs[i].Disconnected -= OnFlowNodeInputDisconnected;
+                flowNode.Inputs[i].Disconnected -= OnFlowNodeInputDisconnecting;
             }
         }
     }

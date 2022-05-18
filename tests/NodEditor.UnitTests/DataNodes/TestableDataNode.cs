@@ -9,10 +9,12 @@ namespace NodEditor.UnitTests.DataNodes
         }
 
         public bool IsExecuted { get; private set; }
+        public int ExecutionCount { get; private set; }
 
         protected override void OnExecute()
         {
             IsExecuted = true;
+            ExecutionCount++;
         }
     }
 }

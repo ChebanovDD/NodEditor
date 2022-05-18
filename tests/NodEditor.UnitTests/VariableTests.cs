@@ -16,7 +16,7 @@ namespace NodEditor.UnitTests
         {
             _nodeEditor = new NodeEditor(new FlowManager(), new Connector());
         }
-        
+
         [Fact]
         public void Start_ShouldExecuteFlow_WhenFlowIsValid()
         {
@@ -38,23 +38,22 @@ namespace NodEditor.UnitTests
                 .AddNode(logNode)
                 .AddNode(getSpeedNode)
                 .AddNode(setSpeedNode);
-            
+
             // Act
             _nodeEditor.Connect(getSpeedNode.Output, logNode.Inputs[0]);
             _nodeEditor.Connect(startNode.OutputFlows[0], setSpeedNode.InputFlow);
             _nodeEditor.Connect(setSpeedNode.OutputFlows[0], logNode.InputFlow);
-            
+
             flowGraph.Start();
 
-            var valueBeforeConnection = logNode.GetLastValue();
-            
             _nodeEditor.Connect(valueNode.Output, setSpeedNode.Inputs[0]);
-            
+
             flowGraph.Start();
-            
+
             // Assert
-            valueBeforeConnection.Should().Be(5.5f);
-            logNode.GetLastValue().Should().Be(2.5f);
+            logNode.Values.Count.Should().Be(2);
+            logNode.Values[0].Should().Be(5.5f);
+            logNode.Values[1].Should().Be(2.5f);
         }
     }
 }
