@@ -1,7 +1,7 @@
 ﻿using NodEditor.App.Nodes;
 using NodEditor.App.Sockets;
 
-namespace NodEditor.UnitTests.Nodes
+namespace NodEditor.UnitTests.FlowNodes
 {
     public class LogNode<T> : FlowNode
     {

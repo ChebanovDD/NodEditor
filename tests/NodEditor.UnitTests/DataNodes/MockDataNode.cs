@@ -1,7 +1,7 @@
 ﻿using NodEditor.App.Nodes;
 using NodEditor.Core.Interfaces;
 
-namespace NodEditor.UnitTests.Nodes
+namespace NodEditor.UnitTests.DataNodes
 {
     public class MockDataNode : DataNode
     {

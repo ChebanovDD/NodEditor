@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using NodEditor.App.Interfaces;
-using NodEditor.UnitTests.Nodes;
+using NodEditor.UnitTests.DataNodes;
+using NodEditor.UnitTests.FlowNodes;
 using Xunit;
 
 namespace NodEditor.UnitTests

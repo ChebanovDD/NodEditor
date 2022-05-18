@@ -1,6 +1,6 @@
 ﻿using NodEditor.App.Nodes;
 
-namespace NodEditor.UnitTests.Nodes
+namespace NodEditor.UnitTests.DataNodes
 {
     public abstract class TestableDataNode : DataNode
     {

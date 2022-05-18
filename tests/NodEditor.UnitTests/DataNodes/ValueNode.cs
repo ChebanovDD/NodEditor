@@ -1,6 +1,6 @@
 ﻿using NodEditor.App.Sockets;
 
-namespace NodEditor.UnitTests.Nodes
+namespace NodEditor.UnitTests.DataNodes
 {
     public class ValueNode<T> : TestableDataNode
     {

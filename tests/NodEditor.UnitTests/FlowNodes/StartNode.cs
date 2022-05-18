@@ -2,7 +2,7 @@
 using NodEditor.App.Sockets;
 using NodEditor.Core.Attributes;
 
-namespace NodEditor.UnitTests.Nodes
+namespace NodEditor.UnitTests.FlowNodes
 {
     [StartNode]
     public class StartNode : FlowNode

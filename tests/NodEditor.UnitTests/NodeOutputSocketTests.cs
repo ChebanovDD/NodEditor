@@ -3,7 +3,7 @@ using FluentAssertions;
 using NodEditor.App.Interfaces;
 using NodEditor.App.Sockets;
 using NodEditor.Core.Exceptions;
-using NodEditor.UnitTests.Nodes;
+using NodEditor.UnitTests.DataNodes;
 using Xunit;
 
 namespace NodEditor.UnitTests
