@@ -12,7 +12,7 @@ namespace NodEditor
                 Disconnect(input.Connection);
             }
             
-            var connection = new Connection(output, input);
+            var connection = new Connection(output, input); // TODO: Pooling.
             
             input.AddConnection(connection);
             output.AddConnection(connection);

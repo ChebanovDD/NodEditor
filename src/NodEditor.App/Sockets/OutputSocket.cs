@@ -51,7 +51,7 @@ namespace NodEditor.App.Sockets
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SetInputValue(IInputSocket input, TValue value)
+        private static void SetInputValue(IInputSocket input, TValue value)
         {
             if (input is InputSocket<TValue> inputSocket)
             {
