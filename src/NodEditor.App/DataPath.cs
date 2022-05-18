@@ -9,7 +9,7 @@ namespace NodEditor.App
     public class DataPath : IDataPath
     {
         private bool _hasChanges;
-        private int _readyNodesCount;
+        private bool _canExecute;
         private List<INode> _nodes;
 
         private readonly IInputSocket _flowInput;
@@ -41,7 +41,7 @@ namespace NodEditor.App
 
         private void ValidateNodes()
         {
-            _readyNodesCount = 0;
+            var readyNodesCount = 0;
             for (var i = 0; i < _nodes.Count; i++)
             {
                 if (_nodes[i].AllInputsReady == false)
@@ -49,13 +49,15 @@ namespace NodEditor.App
                     break;
                 }
 
-                _readyNodesCount++;
+                readyNodesCount++;
             }
+
+            _canExecute = readyNodesCount == _nodes.Count;
         }
 
         public void Execute()
         {
-            if (_readyNodesCount == _nodes.Count)
+            if (_canExecute)
             {
                 ExecutePath();
             }
