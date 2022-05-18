@@ -25,7 +25,7 @@ namespace NodEditor.App
 
         public void Construct()
         {
-            ObserveNodeInputs(_flowInput.Connection.Output.Node, 0);
+            SubscribeToNodeInputs(_flowInput.Connection.Output.Node, 0);
             SortNodes();
             ValidateNodes();
         }
@@ -65,7 +65,7 @@ namespace NodEditor.App
         
         public void Reset()
         {
-            OverlookNodeInputs(_flowInput.Connection.Output.Node);
+            UnsubscribeFromNodeInputs(_flowInput.Connection.Output.Node);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -79,7 +79,7 @@ namespace NodEditor.App
             }
         }
         
-        private void ObserveNodeInputs(INode node, int depth)
+        private void SubscribeToNodeInputs(INode node, int depth)
         {
             if (IsNodeAdded(node.Guid))
             {
@@ -100,7 +100,7 @@ namespace NodEditor.App
                 var input = node.Inputs[i];
                 if (input.HasConnections)
                 {
-                    ObserveNodeInputs(input.Connection.Output.Node, depth + 1);
+                    SubscribeToNodeInputs(input.Connection.Output.Node, depth + 1);
                 }
                 
                 input.Connected += OnDataNodeInputConnected;
@@ -113,7 +113,7 @@ namespace NodEditor.App
             return _nodesDepth.ContainsKey(guid);
         }
 
-        private void OverlookNodeInputs(INode node)
+        private void UnsubscribeFromNodeInputs(INode node)
         {
             _hasChanges = true;
             _nodes.Remove(node);
@@ -129,7 +129,7 @@ namespace NodEditor.App
                 var input = node.Inputs[i];
                 if (input.HasConnections)
                 {
-                    OverlookNodeInputs(input.Connection.Output.Node);
+                    UnsubscribeFromNodeInputs(input.Connection.Output.Node);
                 }
 
                 input.Connected -= OnDataNodeInputConnected;
@@ -139,14 +139,14 @@ namespace NodEditor.App
         
         private void OnDataNodeInputConnected(object sender, IConnection connection)
         {
-            ObserveNodeInputs(connection.Output.Node, _nodesDepth[connection.Input.Node.Guid] + 1);
+            SubscribeToNodeInputs(connection.Output.Node, _nodesDepth[connection.Input.Node.Guid] + 1);
             SortNodes();
             ValidateNodes();
         }
 
         private void OnDataNodeInputDisconnecting(object sender, IConnection connection)
         {
-            OverlookNodeInputs(connection.Output.Node);
+            UnsubscribeFromNodeInputs(connection.Output.Node);
         }
     }
 }
