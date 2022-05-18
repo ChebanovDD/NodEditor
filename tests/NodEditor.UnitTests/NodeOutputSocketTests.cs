@@ -10,12 +10,12 @@ namespace NodEditor.UnitTests
 {
     public class NodeOutputSocketTests
     {
-        private readonly TestDataNode _dataNode;
+        private readonly MockDataNode _dataNode;
         private readonly INodeEditor _nodeEditor;
         
         public NodeOutputSocketTests()
         {
-            _dataNode = new TestDataNode();
+            _dataNode = new MockDataNode();
             _nodeEditor = new NodeEditor(new FlowManager(), new Connector());
         }
         

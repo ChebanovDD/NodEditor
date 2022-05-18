@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using NodEditor.App.Interfaces;
 using NodEditor.App.Sockets;
+using NodEditor.UnitTests.Nodes;
 using Xunit;
 
 namespace NodEditor.UnitTests
@@ -63,6 +64,22 @@ namespace NodEditor.UnitTests
 
             // Assert
             connection.IsCompatible.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Connect_ShouldBeIncompatible_WhenConnectionLooped()
+        {
+            // Arrange
+            var sumNode1 = new SumNode("sumNode1");
+            var sumNode2 = new SumNode("sumNode2");
+
+            // Act
+            var normalConnection = _nodeEditor.Connect(sumNode1.Output, sumNode2.Inputs[0]);
+            var loopedConnection = _nodeEditor.Connect(sumNode2.Output, sumNode1.Inputs[1]);
+
+            // Assert
+            normalConnection.IsCompatible.Should().BeTrue();
+            loopedConnection.IsCompatible.Should().BeFalse();
         }
 
         [Fact]

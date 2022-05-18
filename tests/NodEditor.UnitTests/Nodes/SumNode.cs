@@ -1,9 +1,8 @@
-﻿using NodEditor.App.Nodes;
-using NodEditor.App.Sockets;
+﻿using NodEditor.App.Sockets;
 
 namespace NodEditor.UnitTests.Nodes
 {
-    public class SumNode : DataNode
+    public class SumNode : TestableDataNode
     {
         private readonly InputSocket<float> _input1 = new();
         private readonly InputSocket<float> _input2 = new();
@@ -17,6 +16,7 @@ namespace NodEditor.UnitTests.Nodes
         
         protected override void OnExecute()
         {
+            base.OnExecute();
             _output.Value = _input1.Value + _input2.Value;
         }
     }

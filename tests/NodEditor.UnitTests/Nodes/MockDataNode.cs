@@ -3,11 +3,9 @@ using NodEditor.Core.Interfaces;
 
 namespace NodEditor.UnitTests.Nodes
 {
-    public class TestDataNode : DataNode
+    public class MockDataNode : DataNode
     {
-        private IOutputSocket _output;
-        
-        public TestDataNode() : base(nameof(TestDataNode))
+        public MockDataNode() : base(nameof(MockDataNode))
         {
         }
 
@@ -18,7 +16,6 @@ namespace NodEditor.UnitTests.Nodes
 
         public void AddOutputTest(IOutputSocket output)
         {
-            _output = output;
             AddOutput(output);
         }
 
