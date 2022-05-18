@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using NodEditor.Core.Interfaces;
 
 namespace NodEditor.App
 {
     public class DataPath : IDataPath
     {
-        private bool _hasChanges;
-        private bool _canExecute;
-        private List<INode> _nodes;
-
+        private readonly List<INode> _nodes;
         private readonly IInputSocket _flowInput;
         private readonly Dictionary<Guid, int> _nodesDepth;
+
+        private bool _canExecute;
 
         public DataPath(IInputSocket flowInput)
         {
@@ -26,17 +23,93 @@ namespace NodEditor.App
         public void Construct()
         {
             SubscribeToNodeInputs(_flowInput.Connection.Output.Node, 0);
-            SortNodes();
             ValidateNodes();
         }
 
-        private void SortNodes()
+        public void Execute()
         {
-            if (_hasChanges)
+            if (_canExecute == false)
             {
-                _hasChanges = false;
-                _nodes = _nodes.OrderByDescending(node => _nodesDepth[node.Guid]).ToList();
+                return;
             }
+
+            for (var i = 0; i < _nodes.Count; i++)
+            {
+                // TODO: Skip if no changes.
+                _nodes[i].Execute();
+            }
+        }
+
+        public void Reset()
+        {
+            UnsubscribeFromNodeInputs(_flowInput.Connection.Output.Node);
+        }
+
+        private void SubscribeToNodeInputs(INode node, int depth)
+        {
+            if (IsNodeAdded(node.Guid))
+            {
+                return;
+            }
+
+            _nodes.Insert(IndexFor(depth), node);
+            _nodesDepth.Add(node.Guid, depth);
+
+            if (node.HasInputs == false)
+            {
+                return;
+            }
+
+            for (var i = 0; i < node.Inputs.Length; i++)
+            {
+                var input = node.Inputs[i];
+                if (input.HasConnections)
+                {
+                    SubscribeToNodeInputs(input.Connection.Output.Node, depth + 1);
+                }
+
+                input.Connected += OnDataNodeInputConnected;
+                input.Disconnecting += OnDataNodeInputDisconnecting;
+            }
+        }
+
+        private bool IsNodeAdded(Guid guid)
+        {
+            return _nodesDepth.ContainsKey(guid);
+        }
+
+        private void UnsubscribeFromNodeInputs(INode node)
+        {
+            _nodes.Remove(node);
+            _nodesDepth.Remove(node.Guid);
+
+            if (node.HasInputs == false)
+            {
+                return;
+            }
+
+            for (var i = 0; i < node.Inputs.Length; i++)
+            {
+                var input = node.Inputs[i];
+                if (input.HasConnections)
+                {
+                    UnsubscribeFromNodeInputs(input.Connection.Output.Node);
+                }
+
+                input.Connected -= OnDataNodeInputConnected;
+                input.Disconnecting -= OnDataNodeInputDisconnecting;
+            }
+        }
+
+        private void OnDataNodeInputConnected(object sender, IConnection connection)
+        {
+            SubscribeToNodeInputs(connection.Output.Node, _nodesDepth[connection.Input.Node.Guid] + 1);
+            ValidateNodes();
+        }
+
+        private void OnDataNodeInputDisconnecting(object sender, IConnection connection)
+        {
+            UnsubscribeFromNodeInputs(connection.Output.Node);
         }
 
         private void ValidateNodes()
@@ -55,98 +128,35 @@ namespace NodEditor.App
             _canExecute = readyNodesCount == _nodes.Count;
         }
 
-        public void Execute()
+        /// <summary>
+        /// Binary search for node index by depth in descending order.
+        /// </summary>
+        private int IndexFor(int newNodeDepth)
         {
-            if (_canExecute)
-            {
-                ExecutePath();
-            }
-        }
-        
-        public void Reset()
-        {
-            UnsubscribeFromNodeInputs(_flowInput.Connection.Output.Node);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void ExecutePath()
-        {
-            // TODO: Skip if no changes.
-            
-            for (var i = 0; i < _nodes.Count; i++)
-            {
-                _nodes[i].Execute();
-            }
-        }
-        
-        private void SubscribeToNodeInputs(INode node, int depth)
-        {
-            if (IsNodeAdded(node.Guid))
-            {
-                return;
-            }
-            
-            _nodes.Add(node);
-            _hasChanges = true;
-            _nodesDepth.Add(node.Guid, depth);
+            var leftIndex = 0;
+            var rightIndex = _nodes.Count;
 
-            if (node.HasInputs == false)
+            while (rightIndex - leftIndex > 0)
             {
-                return;
-            }
-            
-            for (var i = 0; i < node.Inputs.Length; i++)
-            {
-                var input = node.Inputs[i];
-                if (input.HasConnections)
+                var middleIndex = (leftIndex + rightIndex) / 2;
+                var middleNodeDepth = _nodesDepth[_nodes[middleIndex].Guid];
+
+                if (newNodeDepth == middleNodeDepth)
                 {
-                    SubscribeToNodeInputs(input.Connection.Output.Node, depth + 1);
-                }
-                
-                input.Connected += OnDataNodeInputConnected;
-                input.Disconnecting += OnDataNodeInputDisconnecting;
-            }
-        }
-
-        private bool IsNodeAdded(Guid guid)
-        {
-            return _nodesDepth.ContainsKey(guid);
-        }
-
-        private void UnsubscribeFromNodeInputs(INode node)
-        {
-            _hasChanges = true;
-            _nodes.Remove(node);
-            _nodesDepth.Remove(node.Guid);
-
-            if (node.HasInputs == false)
-            {
-                return;
-            }
-            
-            for (var i = 0; i < node.Inputs.Length; i++)
-            {
-                var input = node.Inputs[i];
-                if (input.HasConnections)
-                {
-                    UnsubscribeFromNodeInputs(input.Connection.Output.Node);
+                    return middleIndex;
                 }
 
-                input.Connected -= OnDataNodeInputConnected;
-                input.Disconnecting -= OnDataNodeInputDisconnecting;
+                if (newNodeDepth > middleNodeDepth)
+                {
+                    rightIndex = middleIndex;
+                }
+                else
+                {
+                    leftIndex = middleIndex + 1;
+                }
             }
-        }
-        
-        private void OnDataNodeInputConnected(object sender, IConnection connection)
-        {
-            SubscribeToNodeInputs(connection.Output.Node, _nodesDepth[connection.Input.Node.Guid] + 1);
-            SortNodes();
-            ValidateNodes();
-        }
 
-        private void OnDataNodeInputDisconnecting(object sender, IConnection connection)
-        {
-            UnsubscribeFromNodeInputs(connection.Output.Node);
+            return leftIndex;
         }
     }
 }
