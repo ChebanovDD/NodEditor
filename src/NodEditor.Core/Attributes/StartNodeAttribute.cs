@@ -1,9 +1,6 @@
-﻿using System;
-
-namespace NodEditor.Core.Attributes
+﻿namespace NodEditor.Core.Attributes
 {
-    [AttributeUsage(AttributeTargets.Class)]
-    public class StartNodeAttribute : Attribute
+    public class StartNodeAttribute : EntryNodeAttribute
     {
     }
 }

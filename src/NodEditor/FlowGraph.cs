@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NodEditor.App;
 using NodEditor.App.Interfaces;
+using NodEditor.Core.Attributes;
 using NodEditor.Core.Extensions;
 using NodEditor.Core.Interfaces;
 using NodEditor.Variables;
@@ -117,36 +118,30 @@ namespace NodEditor
         }
 
         // TODO: Move to INodeValidator.
-        private bool IsStartNode(INode node, out IFlowNode startNode)
+        private static bool IsStartNode(INode node, out IFlowNode startNode)
         {
-            if (node.IsStartNode())
-            {
-                return IsEntryNode(node, out startNode);
-            }
-            
-            startNode = default;
-            return false;
+            return IsEntryNode<StartNodeAttribute>(node, out startNode);
         }
         
-        private bool IsUpdateNode(INode node, out IFlowNode updateNode)
+        private static bool IsUpdateNode(INode node, out IFlowNode updateNode)
         {
-            if (node.IsUpdateNode())
-            {
-                return IsEntryNode(node, out updateNode);
-            }
-            
-            updateNode = default;
-            return false;
+            return IsEntryNode<UpdateNodeAttribute>(node, out updateNode);
         }
 
-        private bool IsEntryNode(INode node, out IFlowNode entryNode)
+        private static bool IsEntryNode<T>(INode node, out IFlowNode entryNode) where T : EntryNodeAttribute
         {
+            if (node.HasCustomAttribute<T>() == false)
+            {
+                entryNode = default;
+                return false;
+            }
+
             if (node.HasInputs || node.HasOutput || node.IsFlowNode == false)
             {
                 throw new NotImplementedException();
             }
 
-            entryNode = (IFlowNode)node;
+            entryNode = (IFlowNode) node;
 
             if (entryNode.HasInputFlow || entryNode.HasOutputFlows == false)
             {

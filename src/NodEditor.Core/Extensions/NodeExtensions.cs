@@ -1,25 +1,13 @@
-﻿using System;
-using System.Reflection;
-using NodEditor.Core.Attributes;
+﻿using System.Reflection;
 using NodEditor.Core.Interfaces;
 
 namespace NodEditor.Core.Extensions
 {
     public static class NodeExtensions
     {
-        public static bool IsStartNode(this INode node)
+        public static bool HasCustomAttribute<T>(this INode node)
         {
-            return HasCustomAttribute(node, typeof(StartNodeAttribute));
-        }
-        
-        public static bool IsUpdateNode(this INode node)
-        {
-            return HasCustomAttribute(node, typeof(UpdateNodeAttribute));
-        }
-        
-        private static bool HasCustomAttribute(INode node, Type type)
-        {
-            var attribute = node.GetType().GetCustomAttribute(type, true);
+            var attribute = node.GetType().GetCustomAttribute(typeof(T), true);
             return attribute != null;
         }
     }
