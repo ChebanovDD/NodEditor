@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using NodEditor.App.Controllers;
+using NodEditor.App.Internal.Controllers;
 using NodEditor.App.Sockets;
 using NodEditor.Core;
 using NodEditor.Core.Interfaces;

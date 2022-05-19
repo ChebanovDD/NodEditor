@@ -1,5 +1,5 @@
 ﻿using System;
-using NodEditor.App.Controllers;
+using NodEditor.App.Internal.Controllers;
 using NodEditor.Core;
 using NodEditor.Core.Interfaces;
 

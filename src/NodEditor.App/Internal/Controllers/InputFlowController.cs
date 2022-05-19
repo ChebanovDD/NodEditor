@@ -1,6 +1,6 @@
 ﻿using NodEditor.Core.Interfaces;
 
-namespace NodEditor.App.Controllers
+namespace NodEditor.App.Internal.Controllers
 {
     internal class InputFlowController : SocketController<IInputFlowSocket>
     {

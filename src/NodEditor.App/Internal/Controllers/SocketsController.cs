@@ -2,7 +2,7 @@
 using NodEditor.Core.Exceptions;
 using NodEditor.Core.Interfaces;
 
-namespace NodEditor.App.Controllers
+namespace NodEditor.App.Internal.Controllers
 {
     internal abstract class SocketsController<T> : NodeController<T> where T : ISocket
     {
