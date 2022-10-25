@@ -159,5 +159,47 @@ namespace NodEditor.UnitTests
             sumNode1.IsExecuted.Should().BeFalse();
             sumNode2.IsExecuted.Should().BeFalse();
         }
+
+        [Fact]
+        public void Start_ShouldCalculateSum_WhenConnectionChanged()
+        {
+            // Arrange
+            var startNode = new StartNode();
+            var valueNode1 = new ValueNode<float>(1.0f);
+            var valueNode2 = new ValueNode<float>(2.0f);
+            var sumNode = new SumNode("sumNode");
+            var logNode = new LogNode<float>("logNode");
+
+            var flowGraph = new FlowGraph("FlowTest")
+                .AddNode(startNode)
+                .AddNode(valueNode1)
+                .AddNode(valueNode2)
+                .AddNode(sumNode)
+                .AddNode(logNode);
+            
+            // Act
+            _nodeEditor.Connect(valueNode1.Output, sumNode.Inputs[0]);
+            _nodeEditor.Connect(valueNode1.Output, sumNode.Inputs[1]);
+            _nodeEditor.Connect(sumNode.Output, logNode.Inputs[0]);
+            
+            _nodeEditor.Connect(startNode.OutputFlows[0], logNode.InputFlow);
+            
+            flowGraph.Start();
+            
+            _nodeEditor.Connect(valueNode2.Output, sumNode.Inputs[1]);
+            valueNode1.OutputValue = 2.0f;
+
+            flowGraph.Start();
+            
+            _nodeEditor.Disconnect(sumNode.Inputs[0].Connection);
+            
+            flowGraph.Start();
+            
+            // Assert
+            valueNode1.ExecutionCount.Should().Be(2);
+            logNode.Values.Count.Should().Be(2);
+            logNode.Values[0].Should().Be(2.0f);
+            logNode.Values[1].Should().Be(4.0f);
+        }
     }
 }
