@@ -4,19 +4,20 @@ namespace NodEditor.UnitTests.DataNodes
 {
     public class ValueNode<T> : TestableDataNode
     {
-        private readonly T _outputValue;
         private readonly OutputSocket<T> _output = new();
 
         public ValueNode(T outputValue) : base(nameof(T))
         {
-            _outputValue = outputValue;
+            OutputValue = outputValue;
             AddOutput(_output);
         }
+        
+        public T OutputValue { get; set; }
         
         protected override void OnExecute()
         {
             base.OnExecute();
-            _output.Value = _outputValue;
+            _output.Value = OutputValue;
         }
     }
 }
