@@ -26,11 +26,11 @@ namespace NodEditor.App
             ValidateNodes();
         }
 
-        public void Execute()
+        public bool Execute()
         {
             if (_canExecute == false)
             {
-                return;
+                return false;
             }
 
             for (var i = 0; i < _nodes.Count; i++)
@@ -38,6 +38,8 @@ namespace NodEditor.App
                 // TODO: Skip if no changes.
                 _nodes[i].Execute();
             }
+
+            return true;
         }
 
         public void Reset()
@@ -47,6 +49,8 @@ namespace NodEditor.App
 
         private void SubscribeToNodeInputs(INode node, int depth)
         {
+            // TODO: Potential bug if node has more then one depth.
+
             if (IsNodeAdded(node.Guid))
             {
                 return;
@@ -69,6 +73,7 @@ namespace NodEditor.App
                 }
 
                 input.Connected += OnDataNodeInputConnected;
+                input.Disconnected += OnDataNodeInputDisconnected;
                 input.Disconnecting += OnDataNodeInputDisconnecting;
             }
         }
@@ -80,6 +85,11 @@ namespace NodEditor.App
 
         private void UnsubscribeFromNodeInputs(INode node)
         {
+            if (node.Output.ConnectionsCount > 1)
+            {
+                return;
+            }
+            
             _nodes.Remove(node);
             _nodesDepth.Remove(node.Guid);
 
@@ -97,6 +107,7 @@ namespace NodEditor.App
                 }
 
                 input.Connected -= OnDataNodeInputConnected;
+                input.Disconnected -= OnDataNodeInputDisconnected;
                 input.Disconnecting -= OnDataNodeInputDisconnecting;
             }
         }
@@ -110,6 +121,11 @@ namespace NodEditor.App
         private void OnDataNodeInputDisconnecting(object sender, IConnection connection)
         {
             UnsubscribeFromNodeInputs(connection.Output.Node);
+        }
+
+        private void OnDataNodeInputDisconnected(object sender, IConnection connection)
+        {
+            ValidateNodes();
         }
 
         private void ValidateNodes()

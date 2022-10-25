@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using NodEditor.App.Internal.Controllers;
 using NodEditor.Core;
 using NodEditor.Core.Interfaces;
@@ -42,34 +43,42 @@ namespace NodEditor.App.Nodes
 
         public override void Execute()
         {
-            ProcessData();
-            base.Execute();
+            OnExecute(ProcessData(DataPaths));
         }
 
-        private void ProcessData()
+        protected override void OnExecute()
         {
-            if (_dataPaths == null)
+            throw new NotImplementedException();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected abstract void OnExecute(bool allDataPathsExecuted);
+        
+        private bool ProcessData(ReadOnlyArray<IDataPath> dataPaths)
+        {
+            if (dataPaths.Length == 1)
             {
-                return;
+                return dataPaths[0].Execute();
+            }
+            
+            for (var i = 0; i < dataPaths.Length; i++)
+            {
+                if (dataPaths[i].Execute())
+                {
+                    continue;
+                }
+
+                return false;
             }
 
-            if (_dataPaths.Length == 1)
-            {
-                _dataPaths[0].Execute();
-                return;
-            }
-
-            for (var i = 0; i < _dataPaths.Length; i++)
-            {
-                _dataPaths[i].Execute();
-            }
+            return true;
         }
         
         private ReadOnlyArray<IDataPath> CreateDataPaths()
         {
             if (HasInputs == false)
             {
-                throw new NotImplementedException();
+                return ReadOnlyArray<IDataPath>.Empty();
             }
 
             var dataPaths = new IDataPath[Inputs.Length];

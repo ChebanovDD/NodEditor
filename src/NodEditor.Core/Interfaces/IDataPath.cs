@@ -3,7 +3,7 @@
     public interface IDataPath
     {
         void Construct();
-        void Execute();
+        bool Execute();
         void Reset();
     }
 }

@@ -22,9 +22,9 @@ namespace NodEditor.Variables
             AddOutputFlows(_outputFlow);
         }
 
-        protected override void OnExecute()
+        protected override void OnExecute(bool allDataPathsExecuted)
         {
-            if (_input.HasValue)
+            if (_input.HasValue && allDataPathsExecuted)
             {
                 _variable.Value = _input.Value;
             }

@@ -21,12 +21,16 @@ namespace NodEditor.UnitTests.FlowNodes
         public IReadOnlyList<T> Values => _values;
         public bool IsExecuted { get; private set; }
 
-        protected override void OnExecute()
+        protected override void OnExecute(bool allDataPathsExecuted)
         {
             IsExecuted = true;
 
+            if (allDataPathsExecuted)
+            {
+                _values.Add(_input.Value);
+            }
+
             _outputFlow.Open();
-            _values.Add(_input.Value);
         }
     }
 }

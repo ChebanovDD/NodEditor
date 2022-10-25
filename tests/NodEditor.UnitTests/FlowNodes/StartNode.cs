@@ -14,7 +14,7 @@ namespace NodEditor.UnitTests.FlowNodes
             AddOutputFlows(_outputFlow);
         }
         
-        protected override void OnExecute()
+        protected override void OnExecute(bool allDataPathsExecuted)
         {
             _outputFlow.Open();
         }
