@@ -7,13 +7,8 @@ namespace NodEditor.App.Sockets
 {
     public abstract class BaseSocket : NodeElement, ISocket
     {
-        protected readonly List<IConnection> _connections;
+        protected readonly List<IConnection> _connections = new();
 
-        protected BaseSocket()
-        {
-            _connections = new List<IConnection>();
-        }
-        
         public abstract Type Type { get; }
         public INode Node { get; private set; }
         public abstract bool HasValue { get; }
