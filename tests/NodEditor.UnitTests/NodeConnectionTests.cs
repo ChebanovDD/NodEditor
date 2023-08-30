@@ -8,12 +8,7 @@ namespace NodEditor.UnitTests
 {
     public class NodeConnectionTests
     {
-        private readonly INodeEditor _nodeEditor;
-        
-        public NodeConnectionTests()
-        {
-            _nodeEditor = new NodeEditor(new FlowManager(), new Connector());
-        }
+        private readonly IConnector _connector = new Connector();
 
         [Fact]
         public void Connect_ShouldConnectSockets_WhenTypesMatch()
@@ -24,8 +19,8 @@ namespace NodEditor.UnitTests
             var outputSocket = new OutputSocket<int>();
 
             // Act
-            var connection1 = _nodeEditor.Connect(outputSocket, inputSocket1);
-            var connection2 = _nodeEditor.Connect(outputSocket, inputSocket2);
+            var connection1 = _connector.Connect(outputSocket, inputSocket1);
+            var connection2 = _connector.Connect(outputSocket, inputSocket2);
 
             // Assert
             connection1.IsCompatible.Should().BeTrue();
@@ -60,7 +55,7 @@ namespace NodEditor.UnitTests
             var outputSocket = new OutputSocket<float>();
 
             // Act
-            var connection = _nodeEditor.Connect(outputSocket, inputSocket);
+            var connection = _connector.Connect(outputSocket, inputSocket);
 
             // Assert
             connection.IsCompatible.Should().BeFalse();
@@ -74,8 +69,8 @@ namespace NodEditor.UnitTests
             var sumNode2 = new SumNode("sumNode2");
 
             // Act
-            var normalConnection = _nodeEditor.Connect(sumNode1.Output, sumNode2.Inputs[0]);
-            var loopedConnection = _nodeEditor.Connect(sumNode2.Output, sumNode1.Inputs[1]);
+            var normalConnection = _connector.Connect(sumNode1.Output, sumNode2.Inputs[0]);
+            var loopedConnection = _connector.Connect(sumNode2.Output, sumNode1.Inputs[1]);
 
             // Assert
             normalConnection.IsCompatible.Should().BeTrue();
@@ -91,8 +86,8 @@ namespace NodEditor.UnitTests
             var outputSocket2 = new OutputSocket<int>();
             
             // Act
-            _nodeEditor.Connect(outputSocket1, inputSocket);
-            var newConnection = _nodeEditor.Connect(outputSocket2, inputSocket);
+            _connector.Connect(outputSocket1, inputSocket);
+            var newConnection = _connector.Connect(outputSocket2, inputSocket);
 
             // Assert
             inputSocket.HasConnections.Should().BeTrue();
@@ -111,8 +106,8 @@ namespace NodEditor.UnitTests
             var outputSocket = new OutputSocket<int>(5);
             
             // Act
-            var connection = _nodeEditor.Connect(outputSocket, inputSocket);
-            _nodeEditor.Disconnect(connection);
+            var connection = _connector.Connect(outputSocket, inputSocket);
+            _connector.Disconnect(connection);
             
             // Assert
             inputSocket.HasConnections.Should().BeFalse();

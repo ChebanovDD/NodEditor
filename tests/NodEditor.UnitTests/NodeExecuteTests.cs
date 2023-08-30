@@ -8,14 +8,8 @@ namespace NodEditor.UnitTests
 {
     public class NodeExecuteTests
     {
-        private readonly SumNode _sumNode;
-        private readonly INodeEditor _nodeEditor;
-
-        public NodeExecuteTests()
-        {
-            _sumNode = new SumNode(nameof(SumNode));
-            _nodeEditor = new NodeEditor(new FlowManager(), new Connector());
-        }
+        private readonly SumNode _sumNode = new(nameof(SumNode));
+        private readonly IConnector _connector = new Connector();
 
         [Theory]
         [InlineData(0.0f, 0.0f, 0.0f)]
@@ -28,8 +22,8 @@ namespace NodEditor.UnitTests
             var outputSocket2 = new OutputSocket<float>();
             
             // Act
-            _nodeEditor.Connect(outputSocket1, _sumNode.Inputs[0]);
-            _nodeEditor.Connect(outputSocket2, _sumNode.Inputs[1]);
+            _connector.Connect(outputSocket1, _sumNode.Inputs[0]);
+            _connector.Connect(outputSocket2, _sumNode.Inputs[1]);
             
             outputSocket1.Value = value1;
             outputSocket2.Value = value2;

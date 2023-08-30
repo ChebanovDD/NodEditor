@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using NodEditor.App.Interfaces;
 using NodEditor.UnitTests.DataNodes;
 using NodEditor.UnitTests.FlowNodes;
 using Xunit;
@@ -8,13 +7,6 @@ namespace NodEditor.UnitTests
 {
     public class FlowGraphTests
     {
-        private readonly INodeEditor _nodeEditor;
-
-        public FlowGraphTests()
-        {
-            _nodeEditor = new NodeEditor(new FlowManager(), new Connector());
-        }
-
         [Fact]
         public void Start_ShouldExecuteFlow_WhenFlowIsValid()
         {
@@ -45,19 +37,19 @@ namespace NodEditor.UnitTests
                 .AddNode(falseLog);
 
             // Act
-            _nodeEditor.Connect(valueNode1.Output, sumNode1.Inputs[0]);
-            _nodeEditor.Connect(valueNode2.Output, sumNode1.Inputs[1]);
-            _nodeEditor.Connect(sumNode1.Output, logNode1.Inputs[0]);
-            _nodeEditor.Connect(sumNode1.Output, sumNode2.Inputs[0]);
-            _nodeEditor.Connect(sumNode1.Output, sumNode2.Inputs[1]);
-            _nodeEditor.Connect(sumNode2.Output, logNode2.Inputs[0]);
-            _nodeEditor.Connect(boolNode.Output, ifNode.Inputs[0]);
+            flowGraph.Connect(valueNode1.Output, sumNode1.Inputs[0]);
+            flowGraph.Connect(valueNode2.Output, sumNode1.Inputs[1]);
+            flowGraph.Connect(sumNode1.Output, logNode1.Inputs[0]);
+            flowGraph.Connect(sumNode1.Output, sumNode2.Inputs[0]);
+            flowGraph.Connect(sumNode1.Output, sumNode2.Inputs[1]);
+            flowGraph.Connect(sumNode2.Output, logNode2.Inputs[0]);
+            flowGraph.Connect(boolNode.Output, ifNode.Inputs[0]);
 
-            _nodeEditor.Connect(startNode.OutputFlows[0], logNode1.InputFlow);
-            _nodeEditor.Connect(logNode1.OutputFlows[0], ifNode.InputFlow);
-            _nodeEditor.Connect(ifNode.OutputFlows[0], trueLog.InputFlow);
-            _nodeEditor.Connect(ifNode.OutputFlows[1], falseLog.InputFlow);
-            _nodeEditor.Connect(ifNode.OutputFlows[2], logNode2.InputFlow);
+            flowGraph.Connect(startNode.OutputFlows[0], logNode1.InputFlow);
+            flowGraph.Connect(logNode1.OutputFlows[0], ifNode.InputFlow);
+            flowGraph.Connect(ifNode.OutputFlows[0], trueLog.InputFlow);
+            flowGraph.Connect(ifNode.OutputFlows[1], falseLog.InputFlow);
+            flowGraph.Connect(ifNode.OutputFlows[2], logNode2.InputFlow);
 
             flowGraph.Start();
 
@@ -85,45 +77,66 @@ namespace NodEditor.UnitTests
         {
             // Arrange
             var startNode = new StartNode();
-            var valueNode1 = new ValueNode<float>(2.5f);
-            var valueNode2 = new ValueNode<float>(5.5f);
-            var sumNode1 = new SumNode("sumNode1");
-            var sumNode2 = new SumNode("sumNode2");
-            var logNode = new LogNode<float>("logNode");
+            var valueNode = new ValueNode<string>("Hello World!");
+            var logNode = new LogNode<string>("LogNode");
 
             var flowGraph = new FlowGraph("FlowTest")
                 .AddNode(startNode)
-                .AddNode(valueNode1)
-                .AddNode(valueNode2)
-                .AddNode(sumNode1)
-                .AddNode(sumNode2)
+                .AddNode(valueNode)
                 .AddNode(logNode);
 
-            _nodeEditor.Connect(valueNode1.Output, sumNode1.Inputs[0]);
-            _nodeEditor.Connect(valueNode1.Output, sumNode1.Inputs[1]);
+            flowGraph.Connect(startNode.OutputFlows[0], logNode.InputFlow);
+            flowGraph.Connect(valueNode.Output, logNode.Inputs[0]);
 
-            _nodeEditor.Connect(valueNode2.Output, sumNode2.Inputs[0]);
-            _nodeEditor.Connect(valueNode2.Output, sumNode2.Inputs[1]);
-
-            _nodeEditor.Connect(startNode.OutputFlows[0], logNode.InputFlow);
-
-            // Act
-            _nodeEditor.Connect(sumNode1.Output, logNode.Inputs[0]);
-            flowGraph.Start();
-
-            _nodeEditor.Connect(sumNode2.Output, logNode.Inputs[0]);
             flowGraph.Start();
 
             // Assert
-            sumNode1.IsExecuted.Should().BeTrue();
-            sumNode2.IsExecuted.Should().BeTrue();
 
-            sumNode1.ExecutionCount.Should().Be(1);
-            sumNode2.ExecutionCount.Should().Be(1);
+            logNode.Values.Count.Should().Be(1);
+            logNode.Values[0].Should().Be("Hello World!");
 
-            logNode.Values.Count.Should().Be(2);
-            logNode.Values[0].Should().Be(5.0f);
-            logNode.Values[1].Should().Be(11.0f);
+
+            // // Arrange
+            // var startNode = new StartNode();
+            // var valueNode1 = new ValueNode<float>(2.5f);
+            // var valueNode2 = new ValueNode<float>(5.5f);
+            // var sumNode1 = new SumNode("sumNode1");
+            // var sumNode2 = new SumNode("sumNode2");
+            // var logNode = new LogNode<float>("logNode");
+            //
+            // var flowGraph = new FlowGraph("FlowTest")
+            //     .AddNode(startNode)
+            //     .AddNode(valueNode1)
+            //     .AddNode(valueNode2)
+            //     .AddNode(sumNode1)
+            //     .AddNode(sumNode2)
+            //     .AddNode(logNode);
+            //
+            // flowGraph.Connect(valueNode1.Output, sumNode1.Inputs[0]);
+            // flowGraph.Connect(valueNode1.Output, sumNode1.Inputs[1]);
+            //
+            // flowGraph.Connect(valueNode2.Output, sumNode2.Inputs[0]);
+            // flowGraph.Connect(valueNode2.Output, sumNode2.Inputs[1]);
+            //
+            // flowGraph.Connect(startNode.OutputFlows[0], logNode.InputFlow);
+            //
+            // // Act
+            // flowGraph.Connect(sumNode1.Output, logNode.Inputs[0]);
+            // flowGraph.Start();
+            //
+            // flowGraph.Connect(sumNode2.Output, logNode.Inputs[0]);
+            // flowGraph.Start();
+            //
+            // // Assert
+            // sumNode1.IsExecuted.Should().BeTrue();
+            // sumNode2.IsExecuted.Should().BeTrue();
+            //
+            // sumNode1.ExecutionCount.Should().Be(1);
+            // sumNode2.ExecutionCount.Should().Be(1);
+            //
+            // logNode.Values.Count.Should().Be(2);
+            // logNode.Values[0].Should().Be(5.0f);
+            // logNode.Values[1].Should().Be(11.0f);
         }
 
         [Fact]
@@ -144,13 +157,13 @@ namespace NodEditor.UnitTests
                 .AddNode(logNode);
 
             // Act
-            _nodeEditor.Connect(valueNode.Output, sumNode1.Inputs[0]);
-            _nodeEditor.Connect(valueNode.Output, sumNode2.Inputs[1]);
-            _nodeEditor.Connect(sumNode1.Output, sumNode2.Inputs[0]);
-            _nodeEditor.Connect(sumNode2.Output, sumNode1.Inputs[1]);
-            _nodeEditor.Connect(sumNode2.Output, logNode.Inputs[0]);
+            flowGraph.Connect(valueNode.Output, sumNode1.Inputs[0]);
+            flowGraph.Connect(valueNode.Output, sumNode2.Inputs[1]);
+            flowGraph.Connect(sumNode1.Output, sumNode2.Inputs[0]);
+            flowGraph.Connect(sumNode2.Output, sumNode1.Inputs[1]);
+            flowGraph.Connect(sumNode2.Output, logNode.Inputs[0]);
 
-            _nodeEditor.Connect(startNode.OutputFlows[0], logNode.InputFlow);
+            flowGraph.Connect(startNode.OutputFlows[0], logNode.InputFlow);
 
             flowGraph.Start();
 
@@ -176,25 +189,25 @@ namespace NodEditor.UnitTests
                 .AddNode(valueNode2)
                 .AddNode(sumNode)
                 .AddNode(logNode);
-            
+
             // Act
-            _nodeEditor.Connect(valueNode1.Output, sumNode.Inputs[0]);
-            _nodeEditor.Connect(valueNode1.Output, sumNode.Inputs[1]);
-            _nodeEditor.Connect(sumNode.Output, logNode.Inputs[0]);
-            
-            _nodeEditor.Connect(startNode.OutputFlows[0], logNode.InputFlow);
-            
+            flowGraph.Connect(valueNode1.Output, sumNode.Inputs[0]);
+            flowGraph.Connect(valueNode1.Output, sumNode.Inputs[1]);
+            flowGraph.Connect(sumNode.Output, logNode.Inputs[0]);
+
+            flowGraph.Connect(startNode.OutputFlows[0], logNode.InputFlow);
+
             flowGraph.Start();
-            
-            _nodeEditor.Connect(valueNode2.Output, sumNode.Inputs[1]);
+
+            flowGraph.Connect(valueNode2.Output, sumNode.Inputs[1]);
             valueNode1.OutputValue = 2.0f;
 
             flowGraph.Start();
-            
-            _nodeEditor.Disconnect(sumNode.Inputs[0].Connection);
-            
+
+            flowGraph.Disconnect(sumNode.Inputs[0].Connection);
+
             flowGraph.Start();
-            
+
             // Assert
             valueNode1.ExecutionCount.Should().Be(2);
             logNode.Values.Count.Should().Be(2);

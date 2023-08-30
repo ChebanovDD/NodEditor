@@ -10,15 +10,9 @@ namespace NodEditor.UnitTests
 {
     public class NodeInputSocketsTests
     {
-        private readonly MockDataNode _dataNode;
-        private readonly INodeEditor _nodeEditor;
-        
-        public NodeInputSocketsTests()
-        {
-            _dataNode = new MockDataNode();
-            _nodeEditor = new NodeEditor(new FlowManager(), new Connector());
-        }
-        
+        private readonly IConnector _connector = new Connector();
+        private readonly MockDataNode _dataNode = new();
+
         [Fact]
         public void AddInputs_ShouldAddInputs_WhenInputsAreValid()
         {
@@ -55,7 +49,7 @@ namespace NodEditor.UnitTests
 
             // Act
             _dataNode.AddInputsTest(inputSocket);
-            _nodeEditor.Connect(anyOutputSocket, inputSocket);
+            _connector.Connect(anyOutputSocket, inputSocket);
 
             anyOutputSocket.Value = outValue;
             
@@ -98,8 +92,8 @@ namespace NodEditor.UnitTests
             // Act
             _dataNode.AddInputsTest(inputSocket);
             
-            _nodeEditor.Connect(anyOutputSocket, inputSocket);
-            _nodeEditor.Disconnect(inputSocket.Connection);
+            _connector.Connect(anyOutputSocket, inputSocket);
+            _connector.Disconnect(inputSocket.Connection);
             
             // Assert
             _dataNode.GetInputValue<int>(0).Should().Be(default);

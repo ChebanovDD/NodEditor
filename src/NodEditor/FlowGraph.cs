@@ -11,7 +11,10 @@ namespace NodEditor
 {
     public class FlowGraph : IFlowGraph
     {
+        private readonly IConnector _connector;
         private readonly IGraphConstructor _graphConstructor;
+
+        private readonly Dictionary<Guid, INode> _nodes;
         private readonly Dictionary<Guid, IVariable> _variables;
 
         private IFlowNode _startNode;
@@ -24,14 +27,22 @@ namespace NodEditor
         public event EventHandler Enabled;
         public event EventHandler Disabled;
 
-        public FlowGraph(string name) : this(name, Guid.NewGuid())
+        public FlowGraph(string name) : this(name, Guid.NewGuid(), new Connector())
         {
-            _graphConstructor = new GraphConstructor();
-            _variables = new Dictionary<Guid, IVariable>();
         }
-        
-        public FlowGraph(string name, Guid guid)
+
+        public FlowGraph(string name, IConnector connector) : this(name, Guid.NewGuid(), connector)
         {
+        }
+
+        public FlowGraph(string name, Guid guid, IConnector connector)
+        {
+            _connector = connector;
+            _graphConstructor = new GraphConstructor();
+
+            _nodes = new Dictionary<Guid, INode>();
+            _variables = new Dictionary<Guid, IVariable>();
+
             Name = name;
             Guid = guid;
         }
@@ -67,7 +78,7 @@ namespace NodEditor
         {
             _updateNode?.Execute();
         }
-        
+
         public IFlowGraph AddNode(INode node)
         {
             if (IsStartNode(node, out var startNode))
@@ -76,7 +87,7 @@ namespace NodEditor
                 {
                     throw new NotImplementedException();
                 }
-                
+
                 _startNode = startNode ?? throw new NotImplementedException();
             }
             else if (IsUpdateNode(node, out var updateNode))
@@ -85,15 +96,27 @@ namespace NodEditor
                 {
                     throw new NotImplementedException();
                 }
-                
+
                 _updateNode = updateNode ?? throw new NotImplementedException();
             }
             else if (node.IsFlowNode)
             {
-                _graphConstructor.RegisterFlowNode((IFlowNode)node);
+                _graphConstructor.RegisterFlowNode((IFlowNode) node);
             }
 
+            _nodes.Add(node.Guid, node);
+
             return this;
+        }
+
+        public IConnection Connect(IOutputSocket output, IInputSocket input)
+        {
+            return _connector.Connect(output, input);
+        }
+
+        public void Disconnect(IConnection connection)
+        {
+            _connector.Disconnect(connection);
         }
 
         public IFlowGraph RegisterVariable(IVariable variable)
@@ -112,9 +135,9 @@ namespace NodEditor
             return new SetVariableNode<T>(_variables[variableGuid]);
         }
 
-        public void RemoveNode()
+        public void RemoveNode(Guid nodeGuid)
         {
-            throw new NotImplementedException();
+            _nodes.Remove(nodeGuid);
         }
 
         // TODO: Move to INodeValidator.
@@ -122,7 +145,7 @@ namespace NodEditor
         {
             return IsEntryNode<StartNodeAttribute>(node, out startNode);
         }
-        
+
         private static bool IsUpdateNode(INode node, out IFlowNode updateNode)
         {
             return IsEntryNode<UpdateNodeAttribute>(node, out updateNode);

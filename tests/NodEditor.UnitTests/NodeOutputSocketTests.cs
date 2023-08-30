@@ -10,15 +10,9 @@ namespace NodEditor.UnitTests
 {
     public class NodeOutputSocketTests
     {
-        private readonly MockDataNode _dataNode;
-        private readonly INodeEditor _nodeEditor;
-        
-        public NodeOutputSocketTests()
-        {
-            _dataNode = new MockDataNode();
-            _nodeEditor = new NodeEditor(new FlowManager(), new Connector());
-        }
-        
+        private readonly IConnector _connector = new Connector();
+        private readonly MockDataNode _dataNode = new();
+
         [Fact]
         public void AddOutput_ShouldAddOutput_WhenOutputIsValid()
         {
@@ -53,7 +47,7 @@ namespace NodEditor.UnitTests
 
             // Act
             _dataNode.AddOutputTest(outputSocket);
-            _nodeEditor.Connect(outputSocket, anyInputSocket);
+            _connector.Connect(outputSocket, anyInputSocket);
             
             // Assert
             _dataNode.GetOutputValue<int>().Should().Be(outValue);
@@ -94,8 +88,8 @@ namespace NodEditor.UnitTests
             // Act
             _dataNode.AddOutputTest(outputSocket);
             
-            var connection = _nodeEditor.Connect(outputSocket, anyInputSocket);
-            _nodeEditor.Disconnect(connection);
+            var connection = _connector.Connect(outputSocket, anyInputSocket);
+            _connector.Disconnect(connection);
             
             // Assert
             _dataNode.GetOutputValue<int>().Should().Be(default);
